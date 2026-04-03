@@ -4,6 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="theme-color" content="#222222">
     <title>Quran - English Translation</title>
     <style>
         /* Base Reset */
@@ -18,7 +19,7 @@
             width: 100%;
             height: 100%;
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-            background-color: #121212;
+            background-color: #222222;
             color: #f5f5f5;
             overflow: hidden;
         }
@@ -32,7 +33,7 @@
             height: 100vh;
             width: 100vw;
             overflow-y: auto;
-            padding: 2rem 1rem;
+            padding: 2rem 1.5rem;
         }
 
         .header-title {
@@ -70,7 +71,7 @@
             width: 100vw;
         }
 
-        /* Top Navigation Controls - Moved to span the width */
+        /* Unified Top Navigation Controls */
         .controls {
             position: absolute;
             top: 1rem;
@@ -78,7 +79,6 @@
             width: 100%;
             display: flex;
             justify-content: space-between;
-            /* This pushes one left and one right */
             padding: 0 1rem;
             z-index: 100;
         }
@@ -103,9 +103,46 @@
             border-color: #4CAF50;
         }
 
-        /* Container for the Next button to keep alignment if Back is hidden */
         .right-control {
             margin-left: auto;
+        }
+
+        /* Top Bar Background */
+        .top-nav {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            padding: 1rem;
+            background: rgba(18, 18, 18, 0);
+            backdrop-filter: blur(4px);
+            -webkit-backdrop-filter: blur(4px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            z-index: 100;
+        }
+
+        .nav-left,
+        .nav-right {
+            flex: 1;
+            display: flex;
+        }
+
+        .nav-right {
+            justify-content: flex-end;
+        }
+
+        /* Persistent Chapter Title */
+        .persistent-title {
+            flex: 2;
+            text-align: center;
+            font-size: 0.9rem;
+            color: #ccc;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            font-weight: 600;
+            pointer-events: none;
         }
 
         .feed-container {
@@ -130,18 +167,9 @@
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            padding: 2.5rem;
+            padding: 1rem 1.5rem 1rem 1.5rem;
             text-align: center;
             position: relative;
-        }
-
-        .chapter-title {
-            position: absolute;
-            top: 5rem;
-            font-size: 0.9rem;
-            color: #888;
-            letter-spacing: 2px;
-            text-transform: uppercase;
         }
 
         .verse-number {
@@ -159,7 +187,16 @@
 
         @media (max-width: 600px) {
             .verse-text {
-                font-size: 1.5rem;
+                font-size: 1.3rem;
+            }
+
+            .nav-btn {
+                padding: 0.4rem 0.8rem;
+                font-size: 0.8rem;
+            }
+
+            .persistent-title {
+                font-size: 0.8rem;
             }
         }
     </style>
@@ -174,18 +211,50 @@
     </div>
 
     <div id="surah-view" class="hidden">
-        <div class="controls">
-            <button class="nav-btn" id="back-btn">← List</button>
-            <div class="right-control">
-                <button class="nav-btn" id="next-surah-btn">Next Surah →</button>
+        <div class="top-nav">
+            <div class="nav-left">
+                <button class="nav-btn" id="back-btn">← List</button>
+            </div>
+
+            <div id="persistent-chapter-title" class="persistent-title"></div>
+
+            <div class="nav-right">
+                <button class="nav-btn" id="next-surah-btn">Next →</button>
             </div>
         </div>
+
         <div class="feed-container" id="feed-container"></div>
     </div>
 
     <script>
         let quranData = null;
         let currentSurahIndex = 1;
+
+        // Listen for Browser Back/Forward buttons
+        window.addEventListener('popstate', (e) => {
+            if (e.state && e.state.view === 'surah') {
+                displaySurah(e.state.index);
+            } else {
+                displayHome();
+            }
+        });
+
+        // Initialize App
+        window.onload = async () => {
+            await loadQuran();
+
+            // Check if there is a hash in the URL on direct load (e.g. #surah-2)
+            const hash = window.location.hash;
+            if (hash.startsWith('#surah-')) {
+                const idx = hash.replace('#surah-', '');
+                history.replaceState({ view: 'surah', index: idx }, '', hash);
+                displaySurah(idx);
+            } else {
+                // Initialize default history state
+                history.replaceState({ view: 'home' }, '', window.location.pathname);
+                displayHome();
+            }
+        };
 
         async function loadQuran() {
             try {
@@ -209,20 +278,37 @@
 
                 const li = document.createElement('li');
                 li.className = 'surah-item';
-                li.innerHTML = `<span>${index}. Surah ${name}</span> <span class="arrow">›</span>`;
+                li.innerHTML = `<span>${index}. ${name}</span> <span class="arrow">›</span>`;
 
                 li.onclick = () => openSurah(index);
                 list.appendChild(li);
             });
         }
 
+        // Called when a user specifically clicks to go to a Surah
         function openSurah(index) {
+            // Push the new state to browser history
+            history.pushState({ view: 'surah', index: index }, '', `#surah-${index}`);
+            displaySurah(index);
+        }
+
+        // Handles the DOM updates for returning to the main list
+        function displayHome() {
+            document.getElementById('surah-view').classList.add('hidden');
+            document.getElementById('home-view').classList.remove('hidden');
+            document.getElementById('feed-container').innerHTML = '';
+            document.title = "Quran - English Translation";
+        }
+
+        // Handles the DOM updates for showing a specific Surah
+        function displaySurah(index) {
             currentSurahIndex = parseInt(index);
             const suraNode = quranData.querySelector(`sura[index="${index}"]`);
+            if (!suraNode) return displayHome(); // Fallback if invalid ID
+
             const feed = document.getElementById('feed-container');
             const nextBtn = document.getElementById('next-surah-btn');
 
-            // Hide the Next button if at the last surah (114)
             nextBtn.classList.toggle('hidden', currentSurahIndex >= 114);
 
             feed.style.scrollBehavior = 'auto';
@@ -233,29 +319,29 @@
             document.getElementById('surah-view').classList.remove('hidden');
 
             const name = suraNode.getAttribute('name');
+            document.title = `Surah ${name || index} - Quran`;
+            document.getElementById('persistent-chapter-title').innerText = `Surah ${name || index}`;
+
             const ayahs = suraNode.querySelectorAll('aya');
             ayahs.forEach(aya => {
                 const screen = document.createElement('div');
                 screen.className = 'verse-screen';
                 screen.innerHTML = `
-                    <div class="chapter-title">Surah ${name}</div>
-                    <div class="verse-number">Verse ${aya.getAttribute('index')}</div>
+                    <div class="verse-number">Verse ${index}:${aya.getAttribute('index')}</div>
                     <div class="verse-text">${aya.getAttribute('text')}</div>
                 `;
                 feed.appendChild(screen);
             });
 
-            // Reset scroll position to the top of the feed
             feed.scrollTop = 0;
-            setTimeout(() => {
-                feed.style.scrollBehavior = 'smooth';
-            }, 50);
+            setTimeout(() => { feed.style.scrollBehavior = 'smooth'; }, 50);
         }
 
+        // UI Buttons
         document.getElementById('back-btn').onclick = () => {
-            document.getElementById('surah-view').classList.add('hidden');
-            document.getElementById('home-view').classList.remove('hidden');
-            document.getElementById('feed-container').innerHTML = '';
+            // Explicitly push home state and display it when clicking the UI button
+            history.pushState({ view: 'home' }, '', window.location.pathname);
+            displayHome();
         };
 
         document.getElementById('next-surah-btn').onclick = () => {
@@ -264,6 +350,7 @@
             }
         };
 
+        // Keyboard Support
         document.addEventListener('keydown', (e) => {
             if (!document.getElementById('surah-view').classList.contains('hidden')) {
                 const container = document.getElementById('feed-container');
@@ -271,8 +358,6 @@
                 if (e.key === 'ArrowUp') container.scrollBy(0, -window.innerHeight);
             }
         });
-
-        window.onload = loadQuran;
     </script>
 </body>
 
