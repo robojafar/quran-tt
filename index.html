@@ -4,9 +4,50 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <meta name="theme-color" content="#222222">
+    <meta name="theme-color" content="#0f172a">
     <title>Quran - English Translation</title>
     <style>
+        /* --- CSS Variables for Theming --- */
+        :root {
+            /* Light Theme (Airy Garden) */
+            --bg-base: #fcfaf7;
+            --bg-gradient: linear-gradient(180deg, #fdfbf7 0%, #f1f2f6 100%);
+            --text-main: #2d3436;
+            --text-muted: #57606f;
+            --card-bg: #ffffff;
+            --card-border: rgba(0, 0, 0, 0.02);
+            --card-shadow: rgba(0, 0, 0, 0.03);
+            --accent-primary: #e67e22;
+            /* Terracotta */
+            --accent-secondary: #3498db;
+            /* Sky Blue */
+            --nav-bg: rgba(255, 255, 255, 0.85);
+            --nav-border: rgba(0, 0, 0, 0.05);
+            --btn-bg: #ffffff;
+            --btn-hover: #3498db;
+            --hover-highlight: rgba(230, 126, 34, 0.1);
+        }
+
+        [data-theme="dark"] {
+            /* Dark Theme (Midnight) */
+            --bg-base: #0f172a;
+            --bg-gradient: linear-gradient(180deg, #0f172a 0%, #1e1e24 100%);
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --card-bg: #1e293b;
+            --card-border: rgba(255, 255, 255, 0.05);
+            --card-shadow: rgba(0, 0, 0, 0.2);
+            --accent-primary: #f59e0b;
+            /* Golden Amber */
+            --accent-secondary: #0ea5e9;
+            /* Vibrant Cyan */
+            --nav-bg: rgba(15, 23, 42, 0.85);
+            --nav-border: rgba(255, 255, 255, 0.05);
+            --btn-bg: #334155;
+            --btn-hover: #0ea5e9;
+            --hover-highlight: rgba(245, 158, 11, 0.15);
+        }
+
         /* Base Reset */
         * {
             margin: 0;
@@ -18,14 +59,19 @@
         html {
             width: 100%;
             height: 100%;
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-            background-color: #222222;
-            color: #f5f5f5;
+            font-family: 'Georgia', serif;
+            background-color: var(--bg-base);
+            color: var(--text-main);
             overflow: hidden;
+            transition: background-color 0.3s ease, color 0.3s ease;
         }
 
         .hidden {
             display: none !important;
+        }
+
+        .invisible {
+            visibility: hidden !important;
         }
 
         /* --- Landing Page --- */
@@ -33,14 +79,38 @@
             height: 100vh;
             width: 100vw;
             overflow-y: auto;
-            padding: 2rem 1.5rem;
+            padding: 4rem 1.5rem;
+            background: var(--bg-gradient);
+            position: relative;
+        }
+
+        .theme-toggle-container {
+            position: absolute;
+            top: 1.5rem;
+            right: 1.5rem;
+        }
+
+        #theme-toggle {
+            background: var(--card-bg);
+            color: var(--text-main);
+            border: 1px solid var(--nav-border);
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            cursor: pointer;
+            font-family: sans-serif;
+            font-size: 0.85rem;
+            box-shadow: 0 2px 5px var(--card-shadow);
+            transition: all 0.2s;
         }
 
         .header-title {
             text-align: center;
-            margin-bottom: 2rem;
-            color: #4CAF50;
-            letter-spacing: 1px;
+            margin-bottom: 3rem;
+            color: var(--accent-primary);
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            font-size: 1.8rem;
+            font-weight: 300;
         }
 
         #surah-list {
@@ -51,17 +121,24 @@
         }
 
         .surah-item {
-            padding: 1.2rem;
-            border-bottom: 1px solid #333;
+            padding: 1.5rem;
+            margin-bottom: 0.8rem;
+            background: var(--card-bg);
+            border-radius: 15px;
+            box-shadow: 0 4px 15px var(--card-shadow);
             cursor: pointer;
-            font-size: 1.2rem;
+            font-size: 1.1rem;
             display: flex;
             justify-content: space-between;
-            transition: background 0.2s;
+            transition: all 0.3s ease;
+            color: var(--text-muted);
+            border: 1px solid var(--card-border);
         }
 
         .surah-item:hover {
-            background-color: #222;
+            transform: translateY(-2px);
+            background-color: var(--hover-highlight);
+            color: var(--accent-primary);
         }
 
         /* --- Swiping Feed View --- */
@@ -71,80 +148,116 @@
             width: 100vw;
         }
 
-        /* Unified Top Navigation Controls */
-        .controls {
-            position: absolute;
-            top: 1rem;
-            left: 0;
-            width: 100%;
-            display: flex;
-            justify-content: space-between;
-            padding: 0 1rem;
-            z-index: 100;
-        }
-
-        .nav-btn {
-            background: rgba(40, 40, 40, 0.7);
-            color: white;
-            border: 1px solid #444;
-            padding: 0.6rem 1.2rem;
-            border-radius: 20px;
-            cursor: pointer;
-            font-size: 0.9rem;
-            backdrop-filter: blur(8px);
-            transition: all 0.2s;
-            display: flex;
-            align-items: center;
-            gap: 5px;
-        }
-
-        .nav-btn:hover {
-            background: rgba(76, 175, 80, 0.8);
-            border-color: #4CAF50;
-        }
-
-        .right-control {
-            margin-left: auto;
-        }
-
-        /* Top Bar Background */
-        .top-nav {
+        /* --- Top Bar (Title Only) --- */
+        .top-bar {
             position: absolute;
             top: 0;
             left: 0;
             width: 100%;
             display: flex;
+            justify-content: center;
             align-items: center;
-            padding: 1rem;
-            background: rgba(18, 18, 18, 0);
-            backdrop-filter: blur(4px);
-            -webkit-backdrop-filter: blur(4px);
-            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            padding: 1.2rem;
+            background: var(--nav-bg);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--nav-border);
             z-index: 100;
+            height: 60px;
+        }
+
+        .persistent-title {
+            font-size: 0.95rem;
+            color: var(--accent-primary);
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            font-weight: 700;
+            pointer-events: none;
+        }
+
+        /* --- Bottom Bar (Nav + Progress) --- */
+        .bottom-bar {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background: var(--nav-bg);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-top: 1px solid var(--nav-border);
+            z-index: 100;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .progress-container {
+            width: 100%;
+            height: 4px;
+            background: rgba(0, 0, 0, 0.1);
+        }
+
+        #progress-bar {
+            height: 100%;
+            width: 0%;
+            background: var(--accent-secondary);
+            transition: width 0.15s ease-out;
+        }
+
+        .nav-buttons {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 1.5rem;
+            padding-bottom: env(safe-area-inset-bottom, 1rem);
         }
 
         .nav-left,
+        .nav-center,
         .nav-right {
             flex: 1;
             display: flex;
+        }
+
+        .nav-center {
+            justify-content: center;
         }
 
         .nav-right {
             justify-content: flex-end;
         }
 
-        /* Persistent Chapter Title */
-        .persistent-title {
-            flex: 2;
-            text-align: center;
-            font-size: 0.9rem;
-            color: #ccc;
-            letter-spacing: 2px;
-            text-transform: uppercase;
-            font-weight: 600;
-            pointer-events: none;
+        .nav-btn {
+            background: var(--btn-bg);
+            color: var(--text-muted);
+            border: 1px solid var(--nav-border);
+            padding: 0.6rem 1.2rem;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            font-family: sans-serif;
+            font-weight: bold;
+            transition: all 0.2s;
+            box-shadow: 0 2px 5px var(--card-shadow);
         }
 
+        .nav-btn:hover {
+            background: var(--btn-hover);
+            color: white;
+            border-color: var(--btn-hover);
+            transform: translateY(-1px);
+        }
+
+        #home-btn {
+            background: var(--accent-primary);
+            color: white;
+            border-color: var(--accent-primary);
+        }
+
+        #home-btn:hover {
+            opacity: 0.9;
+        }
+
+        /* --- Feed Container --- */
         .feed-container {
             height: 100vh;
             width: 100vw;
@@ -167,36 +280,59 @@
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            padding: 1rem 1.5rem 1rem 1.5rem;
+            padding: 5rem 2.5rem 6rem 2.5rem;
             text-align: center;
             position: relative;
         }
 
         .verse-number {
-            font-size: 1.1rem;
-            color: #4CAF50;
-            margin-bottom: 1rem;
+            font-size: 0.85rem;
+            color: var(--accent-secondary);
+            margin-bottom: 1.5rem;
+            font-family: sans-serif;
+            letter-spacing: 2px;
+            font-weight: bold;
         }
 
         .verse-text {
             font-size: 2rem;
-            line-height: 1.4;
+            line-height: 1.6;
             max-width: 850px;
             text-wrap: balance;
+            font-weight: 400;
+            color: var(--text-main);
+        }
+
+        .verse-text.long-verse {
+            font-size: 1.4rem;
+            line-height: 1.4;
+        }
+
+        .verse-text.extra-long-verse {
+            font-size: 1.15rem;
+            line-height: 1.4;
         }
 
         @media (max-width: 600px) {
             .verse-text {
-                font-size: 1.3rem;
+                font-size: 1.5rem;
+            }
+
+            .verse-text.long-verse {
+                font-size: 1.2rem;
+            }
+
+            .verse-text.extra-long-verse {
+                font-size: 1.05rem;
             }
 
             .nav-btn {
-                padding: 0.4rem 0.8rem;
-                font-size: 0.8rem;
+                padding: 0.5rem 0.8rem;
+                font-size: 0.75rem;
             }
 
-            .persistent-title {
-                font-size: 0.8rem;
+            .nav-buttons {
+                padding: 0.8rem 1rem;
             }
         }
     </style>
@@ -205,55 +341,90 @@
 <body>
 
     <div id="home-view">
+        <div class="theme-toggle-container">
+            <button id="theme-toggle">🌙</button>
+        </div>
         <h1 class="header-title">The Quran</h1>
-        <div id="loading" style="text-align: center; color: #888;">Loading verses...</div>
+        <div id="loading" style="text-align: center; color: var(--text-muted);">Preparing library...</div>
         <ul id="surah-list"></ul>
     </div>
 
     <div id="surah-view" class="hidden">
-        <div class="top-nav">
-            <div class="nav-left">
-                <button class="nav-btn" id="back-btn">← List</button>
-            </div>
-
+        <div class="top-bar">
             <div id="persistent-chapter-title" class="persistent-title"></div>
-
-            <div class="nav-right">
-                <button class="nav-btn" id="next-surah-btn">Next →</button>
-            </div>
         </div>
 
         <div class="feed-container" id="feed-container"></div>
+
+        <div class="bottom-bar">
+            <div class="progress-container">
+                <div id="progress-bar"></div>
+            </div>
+            <div class="nav-buttons">
+                <div class="nav-left">
+                    <button class="nav-btn" id="prev-surah-btn">← Prev</button>
+                </div>
+                <div class="nav-center">
+                    <button class="nav-btn" id="home-btn">Home</button>
+                </div>
+                <div class="nav-right">
+                    <button class="nav-btn" id="next-surah-btn">Next →</button>
+                </div>
+            </div>
+        </div>
     </div>
 
     <script>
         let quranData = null;
         let currentSurahIndex = 1;
 
-        // Listen for Browser Back/Forward buttons
+        // Theme Toggle Logic
+        const themeBtn = document.getElementById('theme-toggle');
+        // Check local storage or system preference
+        const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        let currentTheme = localStorage.getItem('theme') || (prefersDark ? 'dark' : 'light');
+
+        const applyTheme = (theme) => {
+            document.documentElement.setAttribute('data-theme', theme);
+            themeBtn.innerText = theme === 'dark' ? '☀️' : '🌙';
+        };
+
+        applyTheme(currentTheme);
+
+        themeBtn.onclick = () => {
+            currentTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            localStorage.setItem('theme', currentTheme);
+            applyTheme(currentTheme);
+        };
+
+        const updateProgressBar = () => {
+            const feed = document.getElementById('feed-container');
+            const progressBar = document.getElementById('progress-bar');
+            if (!feed || !progressBar) return;
+
+            const totalHeight = feed.scrollHeight - feed.clientHeight;
+            const progress = totalHeight > 0 ? (feed.scrollTop / totalHeight) * 100 : 100;
+            progressBar.style.width = `${progress}%`;
+        };
+
         window.addEventListener('popstate', (e) => {
-            if (e.state && e.state.view === 'surah') {
-                displaySurah(e.state.index);
-            } else {
-                displayHome();
-            }
+            if (e.state && e.state.view === 'surah') { displaySurah(e.state.index); }
+            else { displayHome(); }
         });
 
-        // Initialize App
         window.onload = async () => {
             await loadQuran();
-
-            // Check if there is a hash in the URL on direct load (e.g. #surah-2)
             const hash = window.location.hash;
             if (hash.startsWith('#surah-')) {
                 const idx = hash.replace('#surah-', '');
                 history.replaceState({ view: 'surah', index: idx }, '', hash);
                 displaySurah(idx);
             } else {
-                // Initialize default history state
                 history.replaceState({ view: 'home' }, '', window.location.pathname);
                 displayHome();
             }
+
+            document.getElementById('feed-container').addEventListener('scroll', updateProgressBar);
         };
 
         async function loadQuran() {
@@ -264,9 +435,7 @@
                 quranData = parser.parseFromString(xmlText, "text/xml");
                 document.getElementById('loading').classList.add('hidden');
                 renderSurahList();
-            } catch (e) {
-                document.getElementById('loading').innerText = "Error loading XML.";
-            }
+            } catch (e) { document.getElementById('loading').innerText = "Error loading content."; }
         }
 
         function renderSurahList() {
@@ -275,24 +444,19 @@
             surahs.forEach(sura => {
                 const index = sura.getAttribute('index');
                 const name = sura.getAttribute('name');
-
                 const li = document.createElement('li');
                 li.className = 'surah-item';
-                li.innerHTML = `<span>${index}. ${name}</span> <span class="arrow">›</span>`;
-
+                li.innerHTML = `<span>${index}. ${name}</span> <span style="opacity: 0.3">›</span>`;
                 li.onclick = () => openSurah(index);
                 list.appendChild(li);
             });
         }
 
-        // Called when a user specifically clicks to go to a Surah
         function openSurah(index) {
-            // Push the new state to browser history
             history.pushState({ view: 'surah', index: index }, '', `#surah-${index}`);
             displaySurah(index);
         }
 
-        // Handles the DOM updates for returning to the main list
         function displayHome() {
             document.getElementById('surah-view').classList.add('hidden');
             document.getElementById('home-view').classList.remove('hidden');
@@ -300,62 +464,79 @@
             document.title = "Quran - English Translation";
         }
 
-        // Handles the DOM updates for showing a specific Surah
         function displaySurah(index) {
             currentSurahIndex = parseInt(index);
             const suraNode = quranData.querySelector(`sura[index="${index}"]`);
-            if (!suraNode) return displayHome(); // Fallback if invalid ID
+            if (!suraNode) return displayHome();
 
             const feed = document.getElementById('feed-container');
+            const prevBtn = document.getElementById('prev-surah-btn');
             const nextBtn = document.getElementById('next-surah-btn');
 
-            nextBtn.classList.toggle('hidden', currentSurahIndex >= 114);
+            prevBtn.classList.toggle('invisible', currentSurahIndex <= 1);
+            nextBtn.classList.toggle('invisible', currentSurahIndex >= 114);
 
             feed.style.scrollBehavior = 'auto';
             feed.scrollTop = 0;
             feed.innerHTML = '';
 
+            document.getElementById('progress-bar').style.width = '0%';
+
             document.getElementById('home-view').classList.add('hidden');
             document.getElementById('surah-view').classList.remove('hidden');
 
             const name = suraNode.getAttribute('name');
-            document.title = `Surah ${name || index} - Quran`;
-            document.getElementById('persistent-chapter-title').innerText = `Surah ${name || index}`;
+            document.title = `Surah ${name || index}`;
+            document.getElementById('persistent-chapter-title').innerText = `${name || index}`;
 
             const ayahs = suraNode.querySelectorAll('aya');
             ayahs.forEach(aya => {
+                const text = aya.getAttribute('text');
                 const screen = document.createElement('div');
                 screen.className = 'verse-screen';
+
+                let textClass = '';
+                if (text.length > 700) {
+                    textClass = 'extra-long-verse';
+                    screen.style.justifyContent = 'flex-start';
+                } else if (text.length > 350) {
+                    textClass = 'long-verse';
+                }
+
                 screen.innerHTML = `
                     <div class="verse-number">Verse ${index}:${aya.getAttribute('index')}</div>
-                    <div class="verse-text">${aya.getAttribute('text')}</div>
+                    <div class="verse-text ${textClass}">${text}</div>
                 `;
                 feed.appendChild(screen);
             });
 
             feed.scrollTop = 0;
-            setTimeout(() => { feed.style.scrollBehavior = 'smooth'; }, 50);
+            setTimeout(() => {
+                feed.style.scrollBehavior = 'smooth';
+                updateProgressBar();
+            }, 50);
         }
 
-        // UI Buttons
-        document.getElementById('back-btn').onclick = () => {
-            // Explicitly push home state and display it when clicking the UI button
+        document.getElementById('prev-surah-btn').onclick = () => {
+            if (currentSurahIndex > 1) { openSurah(currentSurahIndex - 1); }
+        };
+
+        document.getElementById('home-btn').onclick = () => {
             history.pushState({ view: 'home' }, '', window.location.pathname);
             displayHome();
         };
 
         document.getElementById('next-surah-btn').onclick = () => {
-            if (currentSurahIndex < 114) {
-                openSurah(currentSurahIndex + 1);
-            }
+            if (currentSurahIndex < 114) { openSurah(currentSurahIndex + 1); }
         };
 
-        // Keyboard Support
         document.addEventListener('keydown', (e) => {
             if (!document.getElementById('surah-view').classList.contains('hidden')) {
                 const container = document.getElementById('feed-container');
                 if (e.key === 'ArrowDown') container.scrollBy(0, window.innerHeight);
                 if (e.key === 'ArrowUp') container.scrollBy(0, -window.innerHeight);
+                if (e.key === 'ArrowLeft' && currentSurahIndex > 1) openSurah(currentSurahIndex - 1);
+                if (e.key === 'ArrowRight' && currentSurahIndex < 114) openSurah(currentSurahIndex + 1);
             }
         });
     </script>
