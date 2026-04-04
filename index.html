@@ -5,11 +5,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <meta name="theme-color" content="#0f172a">
-    <title>Quran - English Translation</title>
+    <title>Quran - Translations</title>
     <style>
-        /* --- CSS Variables for Theming --- */
         :root {
-            /* Light Theme (Airy Garden) */
+            /* Light Theme */
             --bg-base: #fcfaf7;
             --bg-gradient: linear-gradient(180deg, #fdfbf7 0%, #f1f2f6 100%);
             --text-main: #2d3436;
@@ -18,37 +17,34 @@
             --card-border: rgba(0, 0, 0, 0.02);
             --card-shadow: rgba(0, 0, 0, 0.03);
             --accent-primary: #e67e22;
-            /* Terracotta */
             --accent-secondary: #3498db;
-            /* Sky Blue */
             --nav-bg: rgba(255, 255, 255, 0.85);
             --nav-border: rgba(0, 0, 0, 0.05);
             --btn-bg: #ffffff;
             --btn-hover: #3498db;
             --hover-highlight: rgba(230, 126, 34, 0.1);
+            --progress-bg: rgba(0, 0, 0, 0.05);
         }
 
         [data-theme="dark"] {
-            /* Dark Theme (Midnight) */
+            /* Midnight Pop Theme */
             --bg-base: #0f172a;
-            --bg-gradient: linear-gradient(180deg, #0f172a 0%, #1e1e24 100%);
+            --bg-gradient: linear-gradient(180deg, #0f172a 0%, #1e293b 100%);
             --text-main: #f8fafc;
             --text-muted: #94a3b8;
             --card-bg: #1e293b;
             --card-border: rgba(255, 255, 255, 0.05);
-            --card-shadow: rgba(0, 0, 0, 0.2);
-            --accent-primary: #f59e0b;
-            /* Golden Amber */
-            --accent-secondary: #0ea5e9;
-            /* Vibrant Cyan */
-            --nav-bg: rgba(15, 23, 42, 0.85);
-            --nav-border: rgba(255, 255, 255, 0.05);
+            --card-shadow: rgba(0, 0, 0, 0.4);
+            --accent-primary: #fbbf24;
+            --accent-secondary: #22d3ee;
+            --nav-bg: rgba(15, 23, 42, 0.9);
+            --nav-border: rgba(255, 255, 255, 0.1);
             --btn-bg: #334155;
-            --btn-hover: #0ea5e9;
-            --hover-highlight: rgba(245, 158, 11, 0.15);
+            --btn-hover: #22d3ee;
+            --hover-highlight: rgba(251, 191, 36, 0.15);
+            --progress-bg: rgba(255, 255, 255, 0.1);
         }
 
-        /* Base Reset */
         * {
             margin: 0;
             padding: 0;
@@ -58,12 +54,12 @@
         body,
         html {
             width: 100%;
-            height: 100%;
+            height: 100dvh;
             font-family: 'Georgia', serif;
             background-color: var(--bg-base);
             color: var(--text-main);
             overflow: hidden;
-            transition: background-color 0.3s ease, color 0.3s ease;
+            transition: background-color 0.3s ease;
         }
 
         .hidden {
@@ -76,10 +72,10 @@
 
         /* --- Landing Page --- */
         #home-view {
-            height: 100vh;
+            height: 100dvh;
             width: 100vw;
             overflow-y: auto;
-            padding: 4rem 1.5rem;
+            padding: 5rem 1.5rem 4rem 1.5rem;
             background: var(--bg-gradient);
             position: relative;
         }
@@ -88,24 +84,39 @@
             position: absolute;
             top: 1.5rem;
             right: 1.5rem;
+            z-index: 10;
         }
 
-        #theme-toggle {
+        .translation-toggle-container {
+            position: absolute;
+            top: 1.5rem;
+            left: 1.5rem;
+            z-index: 10;
+        }
+
+        .top-control {
             background: var(--card-bg);
             color: var(--text-main);
             border: 1px solid var(--nav-border);
-            padding: 0.5rem 1rem;
-            border-radius: 20px;
+            padding: 0.6rem 1.2rem;
+            border-radius: 25px;
             cursor: pointer;
             font-family: sans-serif;
-            font-size: 0.85rem;
-            box-shadow: 0 2px 5px var(--card-shadow);
-            transition: all 0.2s;
+            font-size: 0.8rem;
+            font-weight: bold;
+            box-shadow: 0 4px 10px var(--card-shadow);
+            outline: none;
+            transition: all 0.2s ease;
+        }
+
+        .top-control:hover {
+            border-color: var(--accent-secondary);
         }
 
         .header-title {
             text-align: center;
             margin-bottom: 3rem;
+            margin-top: 1rem;
             color: var(--accent-primary);
             letter-spacing: 4px;
             text-transform: uppercase;
@@ -117,73 +128,91 @@
             list-style: none;
             max-width: 600px;
             margin: 0 auto;
-            padding-bottom: 4rem;
+            padding-bottom: 6rem;
         }
 
         .surah-item {
-            padding: 1.5rem;
+            padding: 1.2rem 1.5rem;
             margin-bottom: 0.8rem;
             background: var(--card-bg);
             border-radius: 15px;
             box-shadow: 0 4px 15px var(--card-shadow);
             cursor: pointer;
-            font-size: 1.1rem;
             display: flex;
             justify-content: space-between;
-            transition: all 0.3s ease;
+            align-items: center;
             color: var(--text-muted);
             border: 1px solid var(--card-border);
+            transition: 0.2s;
+        }
+
+        .surah-item-info {
+            display: flex;
+            flex-direction: column;
+            gap: 0.3rem;
+        }
+
+        .surah-name {
+            font-size: 1.15rem;
+            font-weight: bold;
+            color: var(--text-main);
+        }
+
+        .surah-translation {
+            font-size: 0.85rem;
+            font-family: sans-serif;
+            opacity: 0.8;
         }
 
         .surah-item:hover {
-            transform: translateY(-2px);
             background-color: var(--hover-highlight);
+            transform: scale(1.02);
+        }
+
+        .surah-item:hover .surah-name {
             color: var(--accent-primary);
         }
 
         /* --- Swiping Feed View --- */
         #surah-view {
             position: relative;
-            height: 100vh;
+            height: 100dvh;
             width: 100vw;
         }
 
-        /* --- Top Bar (Title Only) --- */
         .top-bar {
-            position: absolute;
+            position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             display: flex;
             justify-content: center;
             align-items: center;
-            padding: 1.2rem;
+            padding: 1rem;
             background: var(--nav-bg);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
             border-bottom: 1px solid var(--nav-border);
             z-index: 100;
             height: 60px;
         }
 
         .persistent-title {
-            font-size: 0.95rem;
+            font-size: 0.9rem;
             color: var(--accent-primary);
             letter-spacing: 2px;
             text-transform: uppercase;
             font-weight: 700;
-            pointer-events: none;
         }
 
-        /* --- Bottom Bar (Nav + Progress) --- */
         .bottom-bar {
-            position: absolute;
+            position: fixed;
             bottom: 0;
             left: 0;
             width: 100%;
             background: var(--nav-bg);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
             border-top: 1px solid var(--nav-border);
             z-index: 100;
             display: flex;
@@ -193,73 +222,53 @@
         .progress-container {
             width: 100%;
             height: 4px;
-            background: rgba(0, 0, 0, 0.1);
+            background: var(--progress-bg);
         }
 
         #progress-bar {
             height: 100%;
             width: 0%;
             background: var(--accent-secondary);
-            transition: width 0.15s ease-out;
+            box-shadow: 0 0 10px var(--accent-secondary);
+            transition: width 0.2s ease-out;
         }
 
         .nav-buttons {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 1rem 1.5rem;
-            padding-bottom: env(safe-area-inset-bottom, 1rem);
-        }
-
-        .nav-left,
-        .nav-center,
-        .nav-right {
-            flex: 1;
-            display: flex;
-        }
-
-        .nav-center {
-            justify-content: center;
-        }
-
-        .nav-right {
-            justify-content: flex-end;
+            padding: 0.8rem 1.5rem;
+            padding-bottom: calc(1.2rem + env(safe-area-inset-bottom, 0px));
         }
 
         .nav-btn {
             background: var(--btn-bg);
-            color: var(--text-muted);
+            color: var(--text-main);
             border: 1px solid var(--nav-border);
             padding: 0.6rem 1.2rem;
             border-radius: 25px;
             cursor: pointer;
-            font-size: 0.85rem;
+            font-size: 0.8rem;
             font-family: sans-serif;
             font-weight: bold;
-            transition: all 0.2s;
-            box-shadow: 0 2px 5px var(--card-shadow);
+            box-shadow: 0 2px 8px var(--card-shadow);
+            transition: all 0.2s ease;
         }
 
         .nav-btn:hover {
             background: var(--btn-hover);
-            color: white;
-            border-color: var(--btn-hover);
-            transform: translateY(-1px);
+            color: #fff;
         }
 
         #home-btn {
             background: var(--accent-primary);
-            color: white;
+            color: #000;
             border-color: var(--accent-primary);
-        }
-
-        #home-btn:hover {
-            opacity: 0.9;
         }
 
         /* --- Feed Container --- */
         .feed-container {
-            height: 100vh;
+            height: 100dvh;
             width: 100vw;
             overflow-y: scroll;
             scroll-snap-type: y mandatory;
@@ -272,7 +281,7 @@
         }
 
         .verse-screen {
-            height: 100vh;
+            height: 100dvh;
             width: 100vw;
             scroll-snap-align: start;
             scroll-snap-stop: always;
@@ -280,13 +289,12 @@
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            padding: 5rem 2.5rem 6rem 2.5rem;
+            padding: 6rem 2rem 8rem 2rem;
             text-align: center;
-            position: relative;
         }
 
         .verse-number {
-            font-size: 0.85rem;
+            font-size: 0.8rem;
             color: var(--accent-secondary);
             margin-bottom: 1.5rem;
             font-family: sans-serif;
@@ -297,20 +305,17 @@
         .verse-text {
             font-size: 2rem;
             line-height: 1.6;
-            max-width: 850px;
+            max-width: 800px;
             text-wrap: balance;
-            font-weight: 400;
             color: var(--text-main);
         }
 
         .verse-text.long-verse {
             font-size: 1.4rem;
-            line-height: 1.4;
         }
 
         .verse-text.extra-long-verse {
-            font-size: 1.15rem;
-            line-height: 1.4;
+            font-size: 1.1rem;
         }
 
         @media (max-width: 600px) {
@@ -326,13 +331,13 @@
                 font-size: 1.05rem;
             }
 
-            .nav-btn {
+            .top-control {
                 padding: 0.5rem 0.8rem;
                 font-size: 0.75rem;
             }
 
-            .nav-buttons {
-                padding: 0.8rem 1rem;
+            .header-title {
+                margin-top: 2.5rem;
             }
         }
     </style>
@@ -341,11 +346,20 @@
 <body>
 
     <div id="home-view">
-        <div class="theme-toggle-container">
-            <button id="theme-toggle">🌙</button>
+        <div class="translation-toggle-container">
+            <select id="translation-select" class="top-control">
+                <option value="en.itani.xml">English (Itani)</option>
+                <option value="en.sahih.xml">English (Sahih)</option>
+                <option value="en.yusufali.xml">English (Yusuf Ali)</option>
+            </select>
         </div>
+
+        <div class="theme-toggle-container">
+            <button id="theme-toggle" class="top-control">🌙 Dark Mode</button>
+        </div>
+
         <h1 class="header-title">The Quran</h1>
-        <div id="loading" style="text-align: center; color: var(--text-muted);">Preparing library...</div>
+        <div id="loading" style="text-align: center; color: var(--text-muted);">Opening library...</div>
         <ul id="surah-list"></ul>
     </div>
 
@@ -361,34 +375,146 @@
                 <div id="progress-bar"></div>
             </div>
             <div class="nav-buttons">
-                <div class="nav-left">
-                    <button class="nav-btn" id="prev-surah-btn">← Prev</button>
-                </div>
-                <div class="nav-center">
-                    <button class="nav-btn" id="home-btn">Home</button>
-                </div>
-                <div class="nav-right">
-                    <button class="nav-btn" id="next-surah-btn">Next →</button>
-                </div>
+                <div style="flex:1; display:flex;"><button class="nav-btn" id="prev-surah-btn">← Prev</button></div>
+                <div style="flex:1; display:flex; justify-content:center;"><button class="nav-btn"
+                        id="home-btn">Home</button></div>
+                <div style="flex:1; display:flex; justify-content:flex-end;"><button class="nav-btn"
+                        id="next-surah-btn">Next →</button></div>
             </div>
         </div>
     </div>
 
     <script>
+        // Surah Metadata Source of Truth
+        const SURAH_META = [
+            { "index": 1, "name": "Al-Fatihah", "translation": "The Opening" },
+            { "index": 2, "name": "Al-Baqarah", "translation": "The Cow" },
+            { "index": 3, "name": "Ali 'Imran", "translation": "Family of Imran" },
+            { "index": 4, "name": "An-Nisa'", "translation": "The Women" },
+            { "index": 5, "name": "Al-Ma'idah", "translation": "The Table Spread" },
+            { "index": 6, "name": "Al-An'am", "translation": "The Cattle" },
+            { "index": 7, "name": "Al-A'raf", "translation": "The Heights" },
+            { "index": 8, "name": "Al-Anfal", "translation": "The Spoils of War" },
+            { "index": 9, "name": "At-Tawbah", "translation": "The Repentance" },
+            { "index": 10, "name": "Yunus", "translation": "Jonah" },
+            { "index": 11, "name": "Hud", "translation": "Hud" },
+            { "index": 12, "name": "Yusuf", "translation": "Joseph" },
+            { "index": 13, "name": "Ar-Ra'd", "translation": "The Thunder" },
+            { "index": 14, "name": "Ibrahim", "translation": "Abraham" },
+            { "index": 15, "name": "Al-Hijr", "translation": "The Rocky Tract" },
+            { "index": 16, "name": "An-Nahl", "translation": "The Bee" },
+            { "index": 17, "name": "Al-Isra'", "translation": "The Night Journey" },
+            { "index": 18, "name": "Al-Kahf", "translation": "The Cave" },
+            { "index": 19, "name": "Maryam", "translation": "Mary" },
+            { "index": 20, "name": "Ta-Ha", "translation": "Ta-Ha" },
+            { "index": 21, "name": "Al-Anbiya'", "translation": "The Prophets" },
+            { "index": 22, "name": "Al-Hajj", "translation": "The Pilgrimage" },
+            { "index": 23, "name": "Al-Mu'minun", "translation": "The Believers" },
+            { "index": 24, "name": "An-Nur", "translation": "The Light" },
+            { "index": 25, "name": "Al-Furqan", "translation": "The Criterion" },
+            { "index": 26, "name": "Ash-Shu'ara'", "translation": "The Poets" },
+            { "index": 27, "name": "An-Naml", "translation": "The Ant" },
+            { "index": 28, "name": "Al-Qasas", "translation": "The Stories" },
+            { "index": 29, "name": "Al-'Ankabut", "translation": "The Spider" },
+            { "index": 30, "name": "Ar-Rum", "translation": "The Romans" },
+            { "index": 31, "name": "Luqman", "translation": "Luqman" },
+            { "index": 32, "name": "As-Sajdah", "translation": "The Prostration" },
+            { "index": 33, "name": "Al-Ahzab", "translation": "The Combined Forces" },
+            { "index": 34, "name": "Saba'", "translation": "Sheba" },
+            { "index": 35, "name": "Fatir", "translation": "Originator" },
+            { "index": 36, "name": "Ya-Sin", "translation": "Ya-Sin" },
+            { "index": 37, "name": "As-Saffat", "translation": "Those who set the Ranks" },
+            { "index": 38, "name": "Sad", "translation": "The Letter 'Saad'" },
+            { "index": 39, "name": "Az-Zumar", "translation": "The Troops" },
+            { "index": 40, "name": "Ghafir", "translation": "The Forgiver" },
+            { "index": 41, "name": "Fussilat", "translation": "Explained in Detail" },
+            { "index": 42, "name": "Ash-Shura", "translation": "The Consultation" },
+            { "index": 43, "name": "Az-Zukhruf", "translation": "The Ornaments of Gold" },
+            { "index": 44, "name": "Ad-Dukhan", "translation": "The Smoke" },
+            { "index": 45, "name": "Al-Jathiyah", "translation": "The Crouching" },
+            { "index": 46, "name": "Al-Ahqaf", "translation": "The Wind-Curved Sandhills" },
+            { "index": 47, "name": "Muhammad", "translation": "Muhammad" },
+            { "index": 48, "name": "Al-Fath", "translation": "The Victory" },
+            { "index": 49, "name": "Al-Hujurat", "translation": "The Dwellings" },
+            { "index": 50, "name": "Qaf", "translation": "The Letter 'Qaf'" },
+            { "index": 51, "name": "Adh-Dhariyat", "translation": "The Winnowing Winds" },
+            { "index": 52, "name": "At-Tur", "translation": "The Mount" },
+            { "index": 53, "name": "An-Najm", "translation": "The Star" },
+            { "index": 54, "name": "Al-Qamar", "translation": "The Moon" },
+            { "index": 55, "name": "Ar-Rahman", "translation": "The Beneficent" },
+            { "index": 56, "name": "Al-Waqi'ah", "translation": "The Inevitable" },
+            { "index": 57, "name": "Al-Hadid", "translation": "The Iron" },
+            { "index": 58, "name": "Al-Mujadilah", "translation": "The Pleading Woman" },
+            { "index": 59, "name": "Al-Hashr", "translation": "The Exile" },
+            { "index": 60, "name": "Al-Mumtahanah", "translation": "She that is to be examined" },
+            { "index": 61, "name": "As-Saff", "translation": "The Ranks" },
+            { "index": 62, "name": "Al-Jumu'ah", "translation": "The Congregation, Friday" },
+            { "index": 63, "name": "Al-Munafiqun", "translation": "The Hypocrites" },
+            { "index": 64, "name": "At-Taghabun", "translation": "The Mutual Disillusion" },
+            { "index": 65, "name": "At-Talaq", "translation": "The Divorce" },
+            { "index": 66, "name": "At-Tahrim", "translation": "The Prohibition" },
+            { "index": 67, "name": "Al-Mulk", "translation": "The Sovereignty" },
+            { "index": 68, "name": "Al-Qalam", "translation": "The Pen" },
+            { "index": 69, "name": "Al-Haqqah", "translation": "The Reality" },
+            { "index": 70, "name": "Al-Ma'arij", "translation": "The Ascending Stairways" },
+            { "index": 71, "name": "Nuh", "translation": "Noah" },
+            { "index": 72, "name": "Al-Jinn", "translation": "The Jinn" },
+            { "index": 73, "name": "Al-Muzzammil", "translation": "The Enshrouded One" },
+            { "index": 74, "name": "Al-Muddaththir", "translation": "The Cloaked One" },
+            { "index": 75, "name": "Al-Qiyamah", "translation": "The Resurrection" },
+            { "index": 76, "name": "Al-Insan", "translation": "The Man" },
+            { "index": 77, "name": "Al-Mursalat", "translation": "The Emissaries" },
+            { "index": 78, "name": "An-Naba'", "translation": "The Tidings" },
+            { "index": 79, "name": "An-Nazi'at", "translation": "Those who drag forth" },
+            { "index": 80, "name": "'Abasa", "translation": "He Frowned" },
+            { "index": 81, "name": "At-Takwir", "translation": "The Overthrowing" },
+            { "index": 82, "name": "Al-Infitar", "translation": "The Cleaving" },
+            { "index": 83, "name": "Al-Mutaffifin", "translation": "The Defrauding" },
+            { "index": 84, "name": "Al-Inshiqaq", "translation": "The Sundering" },
+            { "index": 85, "name": "Al-Buruj", "translation": "The Mansions of the Stars" },
+            { "index": 86, "name": "At-Tariq", "translation": "The Night-Comer" },
+            { "index": 87, "name": "Al-A'la", "translation": "The Most High" },
+            { "index": 88, "name": "Al-Ghashiyah", "translation": "The Overwhelming" },
+            { "index": 89, "name": "Al-Fajr", "translation": "The Dawn" },
+            { "index": 90, "name": "Al-Balad", "translation": "The City" },
+            { "index": 91, "name": "Ash-Shams", "translation": "The Sun" },
+            { "index": 92, "name": "Al-Layl", "translation": "The Night" },
+            { "index": 93, "name": "Ad-Duha", "translation": "The Morning Hours" },
+            { "index": 94, "name": "Ash-Sharh", "translation": "The Relief" },
+            { "index": 95, "name": "At-Tin", "translation": "The Fig" },
+            { "index": 96, "name": "Al-'Alaq", "translation": "The Clot" },
+            { "index": 97, "name": "Al-Qadr", "translation": "The Power" },
+            { "index": 98, "name": "Al-Bayyinah", "translation": "The Clear Proof" },
+            { "index": 99, "name": "Az-Zalzalah", "translation": "The Earthquake" },
+            { "index": 100, "name": "Al-'Adiyat", "translation": "The Courser" },
+            { "index": 101, "name": "Al-Qari'ah", "translation": "The Calamity" },
+            { "index": 102, "name": "At-Takathur", "translation": "The Rivalry in world increase" },
+            { "index": 103, "name": "Al-'Asr", "translation": "The Declining Day" },
+            { "index": 104, "name": "Al-Humazah", "translation": "The Traducer" },
+            { "index": 105, "name": "Al-Fil", "translation": "The Elephant" },
+            { "index": 106, "name": "Quraysh", "translation": "Quraysh" },
+            { "index": 107, "name": "Al-Ma'un", "translation": "Small Kindnesses" },
+            { "index": 108, "name": "Al-Kawthar", "translation": "Abundance" },
+            { "index": 109, "name": "Al-Kafirun", "translation": "The Disbelievers" },
+            { "index": 110, "name": "An-Nasr", "translation": "The Divine Support" },
+            { "index": 111, "name": "Al-Masad", "translation": "The Palm Fiber" },
+            { "index": 112, "name": "Al-Ikhlas", "translation": "The Sincerity" },
+            { "index": 113, "name": "Al-Falaq", "translation": "The Daybreak" },
+            { "index": 114, "name": "An-Nas", "translation": "Mankind" }
+        ];
+
         let quranData = null;
         let currentSurahIndex = 1;
 
         // Theme Toggle Logic
         const themeBtn = document.getElementById('theme-toggle');
-        // Check local storage or system preference
         const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
         let currentTheme = localStorage.getItem('theme') || (prefersDark ? 'dark' : 'light');
 
         const applyTheme = (theme) => {
             document.documentElement.setAttribute('data-theme', theme);
-            themeBtn.innerText = theme === 'dark' ? '☀️' : '🌙';
+            themeBtn.innerText = theme === 'dark' ? '☀️ Light Mode' : '🌙 Dark Mode';
         };
-
         applyTheme(currentTheme);
 
         themeBtn.onclick = () => {
@@ -397,11 +523,24 @@
             applyTheme(currentTheme);
         };
 
+        // Translation Selection Logic
+        const transSelect = document.getElementById('translation-select');
+        let currentTranslationFile = localStorage.getItem('translationFile') || 'en.itani.xml';
+        transSelect.value = currentTranslationFile;
+
+        transSelect.addEventListener('change', async (e) => {
+            currentTranslationFile = e.target.value;
+            localStorage.setItem('translationFile', currentTranslationFile);
+            document.getElementById('surah-list').innerHTML = '';
+            document.getElementById('loading').classList.remove('hidden');
+            document.getElementById('loading').innerText = "Loading new translation...";
+            await loadQuran();
+        });
+
         const updateProgressBar = () => {
             const feed = document.getElementById('feed-container');
             const progressBar = document.getElementById('progress-bar');
             if (!feed || !progressBar) return;
-
             const totalHeight = feed.scrollHeight - feed.clientHeight;
             const progress = totalHeight > 0 ? (feed.scrollTop / totalHeight) * 100 : 100;
             progressBar.style.width = `${progress}%`;
@@ -416,37 +555,48 @@
             await loadQuran();
             const hash = window.location.hash;
             if (hash.startsWith('#surah-')) {
-                const idx = hash.replace('#surah-', '');
-                history.replaceState({ view: 'surah', index: idx }, '', hash);
-                displaySurah(idx);
+                displaySurah(hash.replace('#surah-', ''));
             } else {
-                history.replaceState({ view: 'home' }, '', window.location.pathname);
                 displayHome();
             }
-
             document.getElementById('feed-container').addEventListener('scroll', updateProgressBar);
         };
 
         async function loadQuran() {
             try {
-                const response = await fetch('en.itani.xml');
+                const response = await fetch(currentTranslationFile);
+                if (!response.ok) throw new Error("File not found");
+
                 const xmlText = await response.text();
                 const parser = new DOMParser();
                 quranData = parser.parseFromString(xmlText, "text/xml");
+
                 document.getElementById('loading').classList.add('hidden');
                 renderSurahList();
-            } catch (e) { document.getElementById('loading').innerText = "Error loading content."; }
+            } catch (e) {
+                document.getElementById('loading').innerText = `Error loading ${currentTranslationFile}. Please make sure the file exists.`;
+            }
         }
 
         function renderSurahList() {
             const list = document.getElementById('surah-list');
+            list.innerHTML = '';
+
             const surahs = quranData.querySelectorAll('sura');
             surahs.forEach(sura => {
-                const index = sura.getAttribute('index');
-                const name = sura.getAttribute('name');
+                const index = parseInt(sura.getAttribute('index'));
+                // Fetch the hardcoded metadata based on index (0-indexed array)
+                const meta = SURAH_META[index - 1];
+
                 const li = document.createElement('li');
                 li.className = 'surah-item';
-                li.innerHTML = `<span>${index}. ${name}</span> <span style="opacity: 0.3">›</span>`;
+                li.innerHTML = `
+                    <div class="surah-item-info">
+                        <span class="surah-name">${index}. ${meta.name}</span>
+                        <span class="surah-translation">${meta.translation}</span>
+                    </div>
+                    <span style="opacity: 0.3;">›</span>
+                `;
                 li.onclick = () => openSurah(index);
                 list.appendChild(li);
             });
@@ -461,7 +611,6 @@
             document.getElementById('surah-view').classList.add('hidden');
             document.getElementById('home-view').classList.remove('hidden');
             document.getElementById('feed-container').innerHTML = '';
-            document.title = "Quran - English Translation";
         }
 
         function displaySurah(index) {
@@ -470,42 +619,32 @@
             if (!suraNode) return displayHome();
 
             const feed = document.getElementById('feed-container');
-            const prevBtn = document.getElementById('prev-surah-btn');
-            const nextBtn = document.getElementById('next-surah-btn');
-
-            prevBtn.classList.toggle('invisible', currentSurahIndex <= 1);
-            nextBtn.classList.toggle('invisible', currentSurahIndex >= 114);
+            document.getElementById('prev-surah-btn').classList.toggle('invisible', currentSurahIndex <= 1);
+            document.getElementById('next-surah-btn').classList.toggle('invisible', currentSurahIndex >= 114);
 
             feed.style.scrollBehavior = 'auto';
             feed.scrollTop = 0;
             feed.innerHTML = '';
-
             document.getElementById('progress-bar').style.width = '0%';
 
             document.getElementById('home-view').classList.add('hidden');
             document.getElementById('surah-view').classList.remove('hidden');
 
-            const name = suraNode.getAttribute('name');
-            document.title = `Surah ${name || index}`;
-            document.getElementById('persistent-chapter-title').innerText = `${name || index}`;
+            // Use hardcoded metadata for titles
+            const meta = SURAH_META[currentSurahIndex - 1];
+            document.title = `Surah ${meta.name}`;
+            document.getElementById('persistent-chapter-title').innerText = meta.name;
 
-            const ayahs = suraNode.querySelectorAll('aya');
-            ayahs.forEach(aya => {
+            suraNode.querySelectorAll('aya').forEach(aya => {
                 const text = aya.getAttribute('text');
                 const screen = document.createElement('div');
                 screen.className = 'verse-screen';
-
-                let textClass = '';
-                if (text.length > 700) {
-                    textClass = 'extra-long-verse';
-                    screen.style.justifyContent = 'flex-start';
-                } else if (text.length > 350) {
-                    textClass = 'long-verse';
-                }
+                let tClass = text.length > 700 ? 'extra-long-verse' : (text.length > 350 ? 'long-verse' : '');
+                if (text.length > 700) screen.style.justifyContent = 'flex-start';
 
                 screen.innerHTML = `
                     <div class="verse-number">Verse ${index}:${aya.getAttribute('index')}</div>
-                    <div class="verse-text ${textClass}">${text}</div>
+                    <div class="verse-text ${tClass}">${text}</div>
                 `;
                 feed.appendChild(screen);
             });
@@ -517,27 +656,17 @@
             }, 50);
         }
 
-        document.getElementById('prev-surah-btn').onclick = () => {
-            if (currentSurahIndex > 1) { openSurah(currentSurahIndex - 1); }
-        };
-
-        document.getElementById('home-btn').onclick = () => {
-            history.pushState({ view: 'home' }, '', window.location.pathname);
-            displayHome();
-        };
-
-        document.getElementById('next-surah-btn').onclick = () => {
-            if (currentSurahIndex < 114) { openSurah(currentSurahIndex + 1); }
-        };
+        document.getElementById('prev-surah-btn').onclick = () => openSurah(currentSurahIndex - 1);
+        document.getElementById('home-btn').onclick = () => { history.pushState({ view: 'home' }, '', ' '); displayHome(); };
+        document.getElementById('next-surah-btn').onclick = () => openSurah(currentSurahIndex + 1);
 
         document.addEventListener('keydown', (e) => {
-            if (!document.getElementById('surah-view').classList.contains('hidden')) {
-                const container = document.getElementById('feed-container');
-                if (e.key === 'ArrowDown') container.scrollBy(0, window.innerHeight);
-                if (e.key === 'ArrowUp') container.scrollBy(0, -window.innerHeight);
-                if (e.key === 'ArrowLeft' && currentSurahIndex > 1) openSurah(currentSurahIndex - 1);
-                if (e.key === 'ArrowRight' && currentSurahIndex < 114) openSurah(currentSurahIndex + 1);
-            }
+            if (document.getElementById('surah-view').classList.contains('hidden')) return;
+            const c = document.getElementById('feed-container');
+            if (e.key === 'ArrowDown') c.scrollBy(0, window.innerHeight);
+            if (e.key === 'ArrowUp') c.scrollBy(0, -window.innerHeight);
+            if (e.key === 'ArrowLeft' && currentSurahIndex > 1) openSurah(currentSurahIndex - 1);
+            if (e.key === 'ArrowRight' && currentSurahIndex < 114) openSurah(currentSurahIndex + 1);
         });
     </script>
 </body>
