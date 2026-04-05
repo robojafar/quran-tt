@@ -18,7 +18,7 @@
             --card-shadow: rgba(0, 0, 0, 0.03);
             --accent-primary: #e67e22;
             --accent-secondary: #3498db;
-            --nav-bg: rgba(255, 255, 255, 0.85);
+            --nav-bg: rgba(255, 255, 255, 0.25);
             --nav-border: rgba(0, 0, 0, 0.05);
             --btn-bg: #ffffff;
             --btn-hover: #3498db;
@@ -37,7 +37,7 @@
             --card-shadow: rgba(0, 0, 0, 0.4);
             --accent-primary: #fbbf24;
             --accent-secondary: #22d3ee;
-            --nav-bg: rgba(15, 23, 42, 0.9);
+            --nav-bg: rgba(15, 23, 42, 0.25);
             --nav-border: rgba(255, 255, 255, 0.1);
             --btn-bg: #334155;
             --btn-hover: #22d3ee;
@@ -186,12 +186,12 @@
             left: 0;
             width: 100%;
             display: flex;
-            justify-content: center;
+            justify-content: space-between;
             align-items: center;
-            padding: 1rem;
+            padding: 1rem 1.5rem;
             background: var(--nav-bg);
-            backdrop-filter: blur(15px);
-            -webkit-backdrop-filter: blur(15px);
+            backdrop-filter: blur(5px);
+            -webkit-backdrop-filter: blur(5px);
             border-bottom: 1px solid var(--nav-border);
             z-index: 100;
             height: 60px;
@@ -205,14 +205,23 @@
             font-weight: 700;
         }
 
+        .persistent-verse {
+            font-size: 0.8rem;
+            color: var(--accent-secondary);
+            font-family: sans-serif;
+            letter-spacing: 1px;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+
         .bottom-bar {
             position: fixed;
             bottom: 0;
             left: 0;
             width: 100%;
             background: var(--nav-bg);
-            backdrop-filter: blur(15px);
-            -webkit-backdrop-filter: blur(15px);
+            backdrop-filter: blur(5px);
+            -webkit-backdrop-filter: blur(5px);
             border-top: 1px solid var(--nav-border);
             z-index: 100;
             display: flex;
@@ -293,15 +302,6 @@
             text-align: center;
         }
 
-        .verse-number {
-            font-size: 0.8rem;
-            color: var(--accent-secondary);
-            margin-bottom: 1.5rem;
-            font-family: sans-serif;
-            letter-spacing: 2px;
-            font-weight: bold;
-        }
-
         .verse-text {
             font-size: 2rem;
             line-height: 1.6;
@@ -351,11 +351,13 @@
                 <option value="en.itani.xml">English (Itani)</option>
                 <option value="en.sahih.xml">English (Sahih)</option>
                 <option value="en.yusufali.xml">English (Yusuf Ali)</option>
+                <option value="en.transliteration.xml">English (Transliteration)</option>
+                <option value="quran-simple.xml">Arabic</option>  
             </select>
         </div>
 
         <div class="theme-toggle-container">
-            <button id="theme-toggle" class="top-control">🌙 Dark Mode</button>
+            <button id="theme-toggle" class="top-control">🌙</button>
         </div>
 
         <h1 class="header-title">The Quran</h1>
@@ -366,6 +368,7 @@
     <div id="surah-view" class="hidden">
         <div class="top-bar">
             <div id="persistent-chapter-title" class="persistent-title"></div>
+            <div id="persistent-verse-number" class="persistent-verse"></div>
         </div>
 
         <div class="feed-container" id="feed-container"></div>
@@ -385,7 +388,6 @@
     </div>
 
     <script>
-        // Surah Metadata Source of Truth
         const SURAH_META = [
             { "index": 1, "name": "Al-Fatihah", "translation": "The Opening" },
             { "index": 2, "name": "Al-Baqarah", "translation": "The Cow" },
@@ -505,6 +507,7 @@
 
         let quranData = null;
         let currentSurahIndex = 1;
+        let currentVerseObserver = null;
 
         // Theme Toggle Logic
         const themeBtn = document.getElementById('theme-toggle');
@@ -513,7 +516,7 @@
 
         const applyTheme = (theme) => {
             document.documentElement.setAttribute('data-theme', theme);
-            themeBtn.innerText = theme === 'dark' ? '☀️ Light Mode' : '🌙 Dark Mode';
+            themeBtn.innerText = theme === 'dark' ? '☀️' : '🌙';
         };
         applyTheme(currentTheme);
 
@@ -585,7 +588,6 @@
             const surahs = quranData.querySelectorAll('sura');
             surahs.forEach(sura => {
                 const index = parseInt(sura.getAttribute('index'));
-                // Fetch the hardcoded metadata based on index (0-indexed array)
                 const meta = SURAH_META[index - 1];
 
                 const li = document.createElement('li');
@@ -611,6 +613,7 @@
             document.getElementById('surah-view').classList.add('hidden');
             document.getElementById('home-view').classList.remove('hidden');
             document.getElementById('feed-container').innerHTML = '';
+            if (currentVerseObserver) currentVerseObserver.disconnect();
         }
 
         function displaySurah(index) {
@@ -622,6 +625,8 @@
             document.getElementById('prev-surah-btn').classList.toggle('invisible', currentSurahIndex <= 1);
             document.getElementById('next-surah-btn').classList.toggle('invisible', currentSurahIndex >= 114);
 
+            if (currentVerseObserver) currentVerseObserver.disconnect();
+
             feed.style.scrollBehavior = 'auto';
             feed.scrollTop = 0;
             feed.innerHTML = '';
@@ -630,30 +635,60 @@
             document.getElementById('home-view').classList.add('hidden');
             document.getElementById('surah-view').classList.remove('hidden');
 
-            // Use hardcoded metadata for titles
             const meta = SURAH_META[currentSurahIndex - 1];
             document.title = `Surah ${meta.name}`;
             document.getElementById('persistent-chapter-title').innerText = meta.name;
+            document.getElementById('persistent-verse-number').innerText = ``; // Cleared initially
+
+            // --- BISMILLAH INJECTION ---
+            // Injects the first verse of the first Surah for every chapter EXCEPT 1 and 9.
+            if (currentSurahIndex > 1 && currentSurahIndex !== 9) {
+                const bismillahNode = quranData.querySelector('sura[index="1"] aya[index="1"]');
+                const bismillahText = bismillahNode ? bismillahNode.getAttribute('text') : "In the name of God, the Gracious, the Merciful.";
+
+                const bScreen = document.createElement('div');
+                bScreen.className = 'verse-screen';
+                bScreen.dataset.verse = 'bismillah'; // Tag for the observer
+                bScreen.innerHTML = `<div class="verse-text">${bismillahText}</div>`;
+                feed.appendChild(bScreen);
+            }
 
             suraNode.querySelectorAll('aya').forEach(aya => {
                 const text = aya.getAttribute('text');
+                const verseIndex = aya.getAttribute('index');
                 const screen = document.createElement('div');
                 screen.className = 'verse-screen';
+                screen.dataset.verse = verseIndex; // Tag for the observer
+
                 let tClass = text.length > 700 ? 'extra-long-verse' : (text.length > 350 ? 'long-verse' : '');
                 if (text.length > 700) screen.style.justifyContent = 'flex-start';
 
-                screen.innerHTML = `
-                    <div class="verse-number">Verse ${index}:${aya.getAttribute('index')}</div>
-                    <div class="verse-text ${tClass}">${text}</div>
-                `;
+                screen.innerHTML = `<div class="verse-text ${tClass}">${text}</div>`;
                 feed.appendChild(screen);
             });
 
+            // Intersection Observer to track which verse is visible and update the top bar
+            const options = { root: feed, rootMargin: '0px', threshold: 0.5 };
+            currentVerseObserver = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        const activeVerse = entry.target.dataset.verse;
+                        if (activeVerse === 'bismillah') {
+                            document.getElementById('persistent-verse-number').innerText = "";
+                        } else {
+                            document.getElementById('persistent-verse-number').innerText = `V. ${index}:${activeVerse}`;
+                        }
+                    }
+                });
+            }, options);
+
+            // Observe all newly created screens
+            document.querySelectorAll('.verse-screen').forEach(screen => {
+                currentVerseObserver.observe(screen);
+            });
+
             feed.scrollTop = 0;
-            setTimeout(() => {
-                feed.style.scrollBehavior = 'smooth';
-                updateProgressBar();
-            }, 50);
+            setTimeout(() => { feed.style.scrollBehavior = 'smooth'; updateProgressBar(); }, 50);
         }
 
         document.getElementById('prev-surah-btn').onclick = () => openSurah(currentSurahIndex - 1);
