@@ -5,10 +5,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <meta name="theme-color" id="theme-color-meta" content="#fcfaf7">
-    <meta name="version" content="6.2">
+    <meta name="version" content="6.11">
     <title>The Qur'an</title>
     <style>
-        /* --- CSS variables and themes remain unchanged --- */
         :root {
             --bg-base: #fcfaf7;
             --bg-gradient: linear-gradient(180deg, #fdfbf7 0%, #f1f2f6 100%);
@@ -24,6 +23,7 @@
             --hover-highlight: rgba(230, 126, 34, 0.1);
             --progress-bg: rgba(0, 0, 0, 0.05);
             --danger: #e74c3c;
+            --font-scale: 1;
         }
 
         [data-theme="dark"] {
@@ -323,6 +323,11 @@
             border-color: var(--accent-secondary);
         }
 
+        .top-control:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
         .bookmarks-list {
             list-style: none;
             margin-top: 1rem;
@@ -394,6 +399,7 @@
             border-bottom: 1px solid var(--nav-border);
             display: flex;
             flex-direction: column;
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
         .top-bar {
@@ -411,6 +417,12 @@
             text-transform: uppercase;
             font-weight: 700;
             transition: all 0.3s;
+            cursor: pointer;
+            user-select: none;
+        }
+
+        .persistent-title:hover {
+            opacity: 0.7;
         }
 
         .persistent-title.arabic-mode {
@@ -504,6 +516,7 @@
             z-index: 100;
             display: flex;
             flex-direction: column;
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
         .progress-hit-area {
@@ -579,6 +592,82 @@
 
         #home-btn:hover {
             background: rgba(230, 126, 34, 0.1);
+        }
+
+        /* --- Zen Mode Classes --- */
+        .zen-hidden-top {
+            transform: translateY(-100%);
+        }
+
+        .zen-hidden-bottom {
+            transform: translateY(100%);
+        }
+
+        /* --- Scrubber & Banners --- */
+        .scrubber-tooltip {
+            position: absolute;
+            bottom: 25px;
+            left: 0;
+            transform: translateX(-50%);
+            background: var(--text-main);
+            color: var(--bg-base);
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-family: sans-serif;
+            font-size: 0.75rem;
+            font-weight: bold;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.2s ease;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            white-space: nowrap;
+            z-index: 110;
+        }
+
+        .scrubber-tooltip.visible {
+            opacity: 1;
+        }
+
+        .continue-banner {
+            position: absolute;
+            top: 115px;
+            left: 50%;
+            transform: translateX(-50%) translateY(-20px);
+            background: var(--text-main);
+            color: var(--bg-base);
+            border: 1px solid var(--accent-secondary);
+            padding: 10px 20px;
+            border-radius: 25px;
+            font-family: sans-serif;
+            font-size: 0.85rem;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 6px 20px var(--card-shadow);
+            opacity: 0;
+            pointer-events: none;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            z-index: 90;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .continue-banner.show {
+            transform: translateX(-50%) translateY(0);
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .continue-banner:hover {
+            transform: translateX(-50%) translateY(-2px) scale(1.02);
+        }
+
+        .continue-banner svg {
+            width: 16px;
+            height: 16px;
+            stroke: currentColor;
+            fill: none;
+            stroke-width: 2;
         }
 
         /* --- Nested Carousel System --- */
@@ -707,8 +796,9 @@
             background: var(--nav-border);
         }
 
+        /* Dynamic Font Sizing added using calc() */
         .verse-text {
-            font-size: 2rem;
+            font-size: calc(2rem * var(--font-scale, 1));
             line-height: 1.6;
             max-width: 800px;
             text-wrap: balance;
@@ -716,11 +806,11 @@
         }
 
         .verse-text.long-verse {
-            font-size: 1.4rem;
+            font-size: calc(1.4rem * var(--font-scale, 1));
         }
 
         .verse-text.extra-long-verse {
-            font-size: 1.1rem;
+            font-size: calc(1.1rem * var(--font-scale, 1));
         }
 
         .verse-text-arabic {
@@ -731,22 +821,22 @@
 
         [data-arabic-font="uthmanic"] .verse-text-arabic {
             font-family: 'UthmanicHafs', serif;
-            font-size: 2.8rem;
+            font-size: calc(2.8rem * var(--font-scale, 1));
             line-height: 1.8;
         }
 
         [data-arabic-font="default"] .verse-text-arabic {
             font-family: 'Amiri', 'Scheherazade New', sans-serif;
-            font-size: 2.3rem;
+            font-size: calc(2.3rem * var(--font-scale, 1));
             line-height: 1.6;
         }
 
         [data-arabic-font="uthmanic"] .verse-text-arabic.long-verse {
-            font-size: 1.8rem;
+            font-size: calc(1.8rem * var(--font-scale, 1));
         }
 
         [data-arabic-font="default"] .verse-text-arabic.long-verse {
-            font-size: 1.6rem;
+            font-size: calc(1.6rem * var(--font-scale, 1));
         }
 
         .swipe-hint {
@@ -825,23 +915,23 @@
 
         @media (max-width: 600px) {
             .verse-text {
-                font-size: 1.5rem;
+                font-size: calc(1.5rem * var(--font-scale, 1));
             }
 
             .verse-text.long-verse {
-                font-size: 1.2rem;
+                font-size: calc(1.2rem * var(--font-scale, 1));
             }
 
             .verse-text.extra-long-verse {
-                font-size: 1.05rem;
+                font-size: calc(1.05rem * var(--font-scale, 1));
             }
 
             [data-arabic-font="uthmanic"] .verse-text-arabic {
-                font-size: 2.2rem;
+                font-size: calc(2.2rem * var(--font-scale, 1));
             }
 
             [data-arabic-font="default"] .verse-text-arabic {
-                font-size: 1.8rem;
+                font-size: calc(1.8rem * var(--font-scale, 1));
             }
 
             .verse-actions {
@@ -890,10 +980,16 @@
 
             <div class="setting-group">
                 <label>Display & Content</label>
+                <div style="display: flex; flex-direction: column; gap: 0.8rem; margin-bottom: 1.5rem;">
+                    <label for="font-size-slider" style="margin: 0; font-size: 0.8rem;">Text Size: <span
+                            id="font-size-val" style="color: var(--accent-primary);">1.00</span>x</label>
+                    <input type="range" id="font-size-slider" min="0.75" max="1.5" step="0.05" value="1"
+                        style="width: 100%; cursor: pointer;">
+                </div>
                 <div class="setting-row">
                     <span class="setting-text">Arabic Font</span>
                     <select id="arabic-font-select" class="top-control" style="width: 55%;">
-                        <option value="default">Default System</option>
+                        <option value="default">Default</option>
                         <option value="uthmanic">Uthmanic Hafs</option>
                     </select>
                 </div>
@@ -907,16 +1003,33 @@
                     </select>
                 </div>
                 <div class="setting-row">
-                    <span class="setting-text">Recitation</span>
-                    <select id="reciter-select" class="top-control" style="width: 55%;">
-                        <option value="Alafasy_128kbps">Al-Afasy</option>
-                        <option value="Abdul_Basit_Mujawwad_128kbps">Abdul Basit (Mujawwad)</option>
-                        <option value="English/Sahih_Intnl_Ibrahim_Walk_192kbps">English (Sahih)</option>
+                    <span class="setting-text">Theme</span>
+                    <button id="theme-toggle" class="top-control" style="width: 55%;">🌙 Dark Mode</button>
+                </div>
+            </div>
+
+            <div class="setting-group">
+                <label>Audio Settings</label>
+                <div class="setting-row">
+                    <span class="setting-text">Playback Source</span>
+                    <select id="audio-mode-select" class="top-control" style="width: 55%;">
+                        <option value="mp3">Recitation</option>
+                        <option value="tts">Text-to-Speech (TTS)</option>
                     </select>
                 </div>
                 <div class="setting-row">
-                    <span class="setting-text">Theme</span>
-                    <button id="theme-toggle" class="top-control" style="width: 55%;">🌙 Dark Mode</button>
+                    <span class="setting-text">Recitation</span>
+                    <select id="reciter-select" class="top-control" style="width: 55%;">
+                        <option value="Alafasy_128kbps">Al-Afasy (Arabic)</option>
+                        <option value="Abdul_Basit_Mujawwad_128kbps">Abdul Basit (Arabic)</option>
+                        <option value="English/Sahih_Intnl_Ibrahim_Walk_192kbps">Sahih Intl (English)</option>
+                    </select>
+                </div>
+                <div class="setting-row">
+                    <span class="setting-text">TTS Voice</span>
+                    <select id="tts-voice-select" class="top-control" style="width: 55%;">
+                        <option value="">Loading voices...</option>
+                    </select>
                 </div>
             </div>
 
@@ -954,6 +1067,8 @@
             </div>
         </div>
 
+        <div id="continue-banner" class="continue-banner hidden"></div>
+
         <div class="tab-carousel" id="tab-carousel">
             <div class="vertical-feed" id="trans-feed"></div>
             <div class="vertical-feed" id="arabic-feed"></div>
@@ -968,6 +1083,7 @@
 
         <div class="bottom-bar">
             <div class="progress-hit-area" id="progress-track">
+                <div id="scrubber-tooltip" class="scrubber-tooltip"></div>
                 <div class="progress-container">
                     <div id="progress-bar"></div>
                 </div>
@@ -1021,8 +1137,16 @@
             quranXML: null,
             arabicXML: null,
             translationFile: localStorage.getItem('translationFile') || 'en.itani.xml',
+            fontScale: parseFloat(localStorage.getItem('fontScale')) || 1.0,
+
+            // Audio Settings
+            audioMode: localStorage.getItem('audioMode') || 'mp3',
             reciterPath: localStorage.getItem('reciterPath') || 'Alafasy_128kbps',
+            ttsVoiceURI: localStorage.getItem('ttsVoiceURI') || '',
+            availableTTSVoices: [],
+
             bookmarks: JSON.parse(localStorage.getItem('quran_bookmarks')) || [],
+            savedPositions: JSON.parse(localStorage.getItem('quran_positions')) || {},
 
             // Reading Context
             currentSurahIndex: 1,
@@ -1032,6 +1156,7 @@
             verseObserver: null,
 
             // Automations
+            preventSave: true, // Replaces isRestoring to lock position saving until user interacts
             autoAdvanceAudio: false,
             isAutoScrolling: false,
             autoScrollSpeed: parseInt(localStorage.getItem('autoScrollSpeed')) || 400,
@@ -1041,7 +1166,7 @@
 
             // Audio Context
             currentAudioObj: null,
-            activePlayButton: null
+            activePlayingVerse: null
         };
 
         const DOM = {
@@ -1134,6 +1259,9 @@
             haltAllAutomations();
             resetReadingEnvironment();
 
+            // Lock the position observer. Only save new positions if the user manually scrolls or clicks jump.
+            AppState.preventSave = true;
+
             AppState.currentSurahIndex = parseInt(index);
             const transSuraNode = AppState.quranXML.querySelector(`sura[index="${index}"]`);
             const arabicSuraNode = AppState.arabicXML.querySelector(`sura[index="${index}"]`);
@@ -1152,28 +1280,69 @@
             renderAllVerses(index, transSuraNode, arabicSuraNode, meta);
             setupScrollSpy(index);
 
-            // Navigate to target or start
             setTimeout(() => {
                 if (targetVerse) {
-                    const targetElEn = DOM.transFeed.querySelector(`[data-verse="${targetVerse}"]`);
-                    const targetElAr = DOM.arabicFeed.querySelector(`[data-verse="${targetVerse}"]`);
-                    if (targetElEn && targetElAr) {
-                        DOM.transFeed.scrollTo({ top: targetElEn.offsetTop, behavior: 'auto' });
-                        DOM.arabicFeed.scrollTo({ top: targetElAr.offsetTop, behavior: 'auto' });
+                    // Explicit bookmark jump
+                    scrollToVerse(targetVerse);
+                    AppState.savedPositions[index] = targetVerse;
+                    localStorage.setItem('quran_positions', JSON.stringify(AppState.savedPositions));
+                    setTimeout(() => { AppState.preventSave = false; }, 250); // Unlock after settling
+                } else {
+                    // Normal open: start at top, show banner if they have history
+                    DOM.tabCarousel.scrollTo({ left: AppState.currentTab === 'arabic' ? window.innerWidth : 0, top: 0, behavior: 'auto' });
+                    DOM.transFeed.style.scrollBehavior = 'smooth';
+                    DOM.arabicFeed.style.scrollBehavior = 'smooth';
+
+                    let savedVerse = AppState.savedPositions[index];
+                    if (savedVerse && savedVerse !== '1' && savedVerse !== 'bismillah') {
+                        showContinueBanner(savedVerse);
                     }
                 }
-                const destX = AppState.currentTab === 'arabic' ? window.innerWidth : 0;
-                DOM.tabCarousel.scrollTo({ left: destX, top: 0, behavior: 'auto' });
-
-                DOM.transFeed.style.scrollBehavior = 'smooth';
-                DOM.arabicFeed.style.scrollBehavior = 'smooth';
                 updateProgressBar();
             }, 50);
+        }
+
+        function scrollToVerse(verseStr) {
+            const targetElEn = DOM.transFeed.querySelector(`[data-verse="${verseStr}"]`);
+            const targetElAr = DOM.arabicFeed.querySelector(`[data-verse="${verseStr}"]`);
+            if (targetElEn && targetElAr) {
+                DOM.transFeed.scrollTo({ top: targetElEn.offsetTop, behavior: 'auto' });
+                DOM.arabicFeed.scrollTo({ top: targetElAr.offsetTop, behavior: 'auto' });
+            }
+        }
+
+        function showContinueBanner(verse) {
+            const banner = document.getElementById('continue-banner');
+            banner.innerHTML = `Continue to Verse ${verse} <svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"></polyline></svg>`;
+            banner.onclick = () => {
+                AppState.preventSave = false; // Allow saving tracking as we jump down
+
+                // Switch to smooth scroll for visual continuity on the jump
+                DOM.transFeed.style.scrollBehavior = 'smooth';
+                DOM.arabicFeed.style.scrollBehavior = 'smooth';
+                scrollToVerse(verse);
+                hideContinueBanner();
+            };
+            banner.classList.remove('hidden');
+            setTimeout(() => banner.classList.add('show'), 50); // Trigger CSS transition
+        }
+
+        function hideContinueBanner() {
+            const banner = document.getElementById('continue-banner');
+            if (banner.classList.contains('show')) {
+                banner.classList.remove('show');
+                setTimeout(() => banner.classList.add('hidden'), 300);
+            }
         }
 
         function resetReadingEnvironment() {
             if (AppState.verseObserver) AppState.verseObserver.disconnect();
             AppState.activeVerseIndex = null;
+
+            hideContinueBanner();
+
+            document.querySelector('.header-assembly').classList.remove('zen-hidden-top');
+            document.querySelector('.bottom-bar').classList.remove('zen-hidden-bottom');
 
             DOM.tabCarousel.scrollTo(0, 0);
             DOM.transFeed.style.scrollBehavior = 'auto';
@@ -1184,14 +1353,12 @@
             DOM.arabicFeed.scrollTo(0, 0);
             document.getElementById('progress-bar').style.width = '0%';
 
-            // Trigger Fade
             DOM.tabCarousel.classList.remove('fade-in');
             void DOM.tabCarousel.offsetWidth;
             DOM.tabCarousel.classList.add('fade-in');
         }
 
         function renderAllVerses(surahIndex, transNode, arabicNode, meta) {
-            // Render Bismillah (if applicable)
             if (surahIndex > 1 && surahIndex !== 9) {
                 const firstAyaAr = arabicNode.querySelector('aya[index="1"]');
                 const bTextAr = (firstAyaAr && firstAyaAr.getAttribute('bismillah')) ? firstAyaAr.getAttribute('bismillah') : "بِسْمِ اللَّهِ الرَّحْمَـٰنِ الرَّحِيمِ";
@@ -1201,7 +1368,6 @@
                 DOM.arabicFeed.appendChild(createVerseDOM(bTextAr, 'bismillah', false, meta.name, surahIndex, true));
             }
 
-            // Render Ayas
             const arabicAyas = Array.from(arabicNode.querySelectorAll('aya'));
             transNode.querySelectorAll('aya').forEach((transAya, i) => {
                 const verseIndex = transAya.getAttribute('index');
@@ -1262,17 +1428,20 @@
                         if (AppState.activeVerseIndex !== newVerse && isVisibleFeed) {
                             AppState.activeVerseIndex = newVerse;
 
-                            // Update header
+                            // ONLY save if preventSave is unlocked (user manually scrolled or clicked banner)
+                            if (!AppState.preventSave) {
+                                AppState.savedPositions[surahIndex] = newVerse;
+                                localStorage.setItem('quran_positions', JSON.stringify(AppState.savedPositions));
+                            }
+
                             document.getElementById('persistent-verse-number').innerText = newVerse === 'bismillah' ? "" : `${surahIndex}:${newVerse}`;
 
-                            // Sync background feed
                             const otherFeed = AppState.currentTab === 'trans' ? DOM.arabicFeed : DOM.transFeed;
                             const hiddenScreenTarget = otherFeed.querySelector(`[data-verse="${newVerse}"]`);
                             if (hiddenScreenTarget) {
                                 otherFeed.scrollTo({ top: hiddenScreenTarget.offsetTop, behavior: 'auto' });
                             }
 
-                            // Trigger Audio/Scroll chained automations
                             if (AppState.shouldAutoPlayNext) {
                                 AppState.shouldAutoPlayNext = false;
                                 playAudio(surahIndex, newVerse);
@@ -1293,7 +1462,16 @@
         // ==========================================
         function initHeaderAutomations() {
             const autoScrollBtn = document.getElementById('header-autoscroll-btn');
+            const topTitleBtn = document.getElementById('persistent-chapter-title');
+
             addLongPressListener(autoScrollBtn, 'Toggle Auto-Scroll');
+            addLongPressListener(topTitleBtn, 'Return to Top');
+
+            topTitleBtn.onclick = () => {
+                haltAllAutomations();
+                DOM.transFeed.scrollTo({ top: 0, behavior: 'smooth' });
+                DOM.arabicFeed.scrollTo({ top: 0, behavior: 'smooth' });
+            };
 
             autoScrollBtn.onclick = () => {
                 AppState.isAutoScrolling = !AppState.isAutoScrolling;
@@ -1308,17 +1486,31 @@
                     clearTimeout(AppState.autoScrollTimer);
                 }
             };
+
+            // Zen Mode Click Toggle
+            [DOM.transFeed, DOM.arabicFeed].forEach(feed => {
+                feed.addEventListener('click', (e) => {
+                    if (e.target.closest('button') || e.target.closest('.progress-hit-area') || e.target.closest('.verse-actions')) return;
+                    document.querySelector('.header-assembly').classList.toggle('zen-hidden-top');
+                    document.querySelector('.bottom-bar').classList.toggle('zen-hidden-bottom');
+                });
+            });
         }
 
         function haltAllAutomations() {
-            if (AppState.currentAudioObj || AppState.isAutoScrolling || AppState.autoAdvanceAudio) {
+            if (AppState.currentAudioObj || window.speechSynthesis.speaking || AppState.isAutoScrolling || AppState.autoAdvanceAudio) {
                 stopAudio();
+
                 if (AppState.isAutoScrolling) {
                     AppState.isAutoScrolling = false;
                     clearTimeout(AppState.autoScrollTimer);
                     document.getElementById('header-autoscroll-btn').classList.remove('active');
                 }
-                if (AppState.autoAdvanceAudio) toggleAutoPlay(false, true);
+
+                if (AppState.autoAdvanceAudio) {
+                    toggleAutoPlay(false, true);
+                }
+
                 AppState.shouldAutoPlayNext = false;
             }
         }
@@ -1341,14 +1533,21 @@
 
             const recordStart = (e) => { startY = e.touches[0].clientY; startX = e.touches[0].clientX; };
             const checkInterrupt = (e) => {
-                if (!AppState.currentAudioObj && !AppState.isAutoScrolling && !AppState.autoAdvanceAudio) return;
-                const dY = Math.abs(e.touches[0].clientY - startY);
+                if (!AppState.currentAudioObj && !window.speechSynthesis.speaking && !AppState.isAutoScrolling && !AppState.autoAdvanceAudio) return;
+
+                const currentY = e.touches[0].clientY;
+                const dY = Math.abs(currentY - startY);
                 const dX = Math.abs(e.touches[0].clientX - startX);
-                if (dY > dX && dY > 10) haltAllAutomations();
+
+                if (dY > dX && dY > 10) {
+                    if (currentY > startY) haltAllAutomations();
+                }
             };
             const checkWheel = (e) => {
-                if (AppState.currentAudioObj || AppState.isAutoScrolling || AppState.autoAdvanceAudio) {
-                    if (Math.abs(e.deltaY) > Math.abs(e.deltaX)) haltAllAutomations();
+                if (AppState.currentAudioObj || window.speechSynthesis.speaking || AppState.isAutoScrolling || AppState.autoAdvanceAudio) {
+                    if (Math.abs(e.deltaY) > Math.abs(e.deltaX)) {
+                        if (e.deltaY < 0) haltAllAutomations();
+                    }
                 }
             };
 
@@ -1360,7 +1559,7 @@
         }
 
         // ==========================================
-        // 8. AUDIO ENGINE
+        // 8. AUDIO ENGINE (MP3 & TTS)
         // ==========================================
         function getAudioUrl(surah, verse) {
             if (verse === 'bismillah') return `https://everyayah.com/data/${AppState.reciterPath}/001001.mp3`;
@@ -1373,44 +1572,79 @@
                 AppState.currentAudioObj.currentTime = 0;
                 AppState.currentAudioObj = null;
             }
+            if (window.speechSynthesis.speaking || window.speechSynthesis.pending) {
+                window.speechSynthesis.cancel();
+            }
+
+            AppState.activePlayingVerse = null;
+
             document.querySelectorAll('.play-btn.playing').forEach(btn => {
                 btn.innerHTML = ICONS.play;
                 btn.classList.remove('playing');
             });
-            AppState.activePlayButton = null;
         }
 
         function playAudio(surah, verse, triggeredBtn = null) {
-            const targets = document.querySelectorAll(`[data-verse="${verse}"]`);
-            const fallbackBtn = targets.length > 0 ? targets[0].querySelector('.play-btn') : null;
-            const refBtn = triggeredBtn || fallbackBtn;
+            if (AppState.activePlayingVerse === verse) {
+                return stopAudio();
+            }
 
-            if (AppState.activePlayButton === refBtn && refBtn) return stopAudio();
             stopAudio();
+            AppState.activePlayingVerse = verse;
 
             if (AppState.isAutoScrolling) {
-                AppState.isAutoScrolling = false; clearTimeout(AppState.autoScrollTimer);
+                AppState.isAutoScrolling = false;
+                clearTimeout(AppState.autoScrollTimer);
                 document.getElementById('header-autoscroll-btn').classList.remove('active');
             }
 
-            AppState.currentAudioObj = new Audio(getAudioUrl(surah, verse));
-            AppState.currentAudioObj.play();
-
+            const targets = document.querySelectorAll(`[data-verse="${verse}"]`);
             targets.forEach(screen => {
                 const btn = screen.querySelector('.play-btn');
                 if (btn) {
-                    btn.innerHTML = ICONS.pause; btn.classList.add('playing');
-                    if (!AppState.activePlayButton) AppState.activePlayButton = btn;
+                    btn.innerHTML = ICONS.pause;
+                    btn.classList.add('playing');
                 }
             });
 
-            AppState.currentAudioObj.onended = () => {
-                stopAudio();
-                if (AppState.autoAdvanceAudio) {
-                    AppState.shouldAutoPlayNext = true;
-                    getActiveFeed().scrollBy({ top: window.innerHeight, behavior: 'smooth' });
+            if (AppState.audioMode === 'tts') {
+                const verseScreen = DOM.transFeed.querySelector(`[data-verse="${verse}"]`);
+                const textToRead = verseScreen ? verseScreen.querySelector('.verse-text').innerText : "";
+                const utterance = new SpeechSynthesisUtterance(textToRead);
+
+                if (AppState.availableTTSVoices.length > 0) {
+                    const selectedVoice = AppState.availableTTSVoices.find(v => v.voiceURI === AppState.ttsVoiceURI);
+                    if (selectedVoice) {
+                        utterance.voice = selectedVoice;
+                    } else {
+                        utterance.lang = 'en-US';
+                    }
+                } else {
+                    utterance.lang = 'en-US';
                 }
-            };
+
+                utterance.rate = 0.95;
+                utterance.onend = () => {
+                    setTimeout(() => {
+                        stopAudio();
+                        if (AppState.autoAdvanceAudio) {
+                            AppState.shouldAutoPlayNext = true;
+                            getActiveFeed().scrollBy({ top: window.innerHeight, behavior: 'smooth' });
+                        }
+                    }, 300);
+                };
+                window.speechSynthesis.speak(utterance);
+            } else {
+                AppState.currentAudioObj = new Audio(getAudioUrl(surah, verse));
+                AppState.currentAudioObj.play();
+                AppState.currentAudioObj.onended = () => {
+                    stopAudio();
+                    if (AppState.autoAdvanceAudio) {
+                        AppState.shouldAutoPlayNext = true;
+                        getActiveFeed().scrollBy({ top: window.innerHeight, behavior: 'smooth' });
+                    }
+                };
+            }
         }
 
         function toggleAutoPlay(forceState = null, silent = false) {
@@ -1539,14 +1773,20 @@
 
         document.addEventListener('keydown', (e) => {
             if (document.getElementById('surah-view').classList.contains('hidden')) return;
-            if (e.key === 'ArrowDown') { haltAllAutomations(); getActiveFeed().scrollBy({ top: window.innerHeight, behavior: 'smooth' }); }
-            if (e.key === 'ArrowUp') { haltAllAutomations(); getActiveFeed().scrollBy({ top: -window.innerHeight, behavior: 'smooth' }); }
+            if (e.key === 'ArrowDown') {
+                getActiveFeed().scrollBy({ top: window.innerHeight, behavior: 'smooth' });
+            }
+            if (e.key === 'ArrowUp') {
+                haltAllAutomations();
+                getActiveFeed().scrollBy({ top: -window.innerHeight, behavior: 'smooth' });
+            }
             if (e.key === 'ArrowRight' && AppState.currentTab === 'trans') switchTabTo('arabic');
             if (e.key === 'ArrowLeft' && AppState.currentTab === 'arabic') switchTabTo('trans');
         });
 
         function initScrubbing() {
             const track = document.getElementById('progress-track');
+            const tooltip = document.getElementById('scrubber-tooltip');
             let isScrubbing = false;
 
             const handleScrub = (e) => {
@@ -1555,12 +1795,30 @@
                 const clientX = e.touches ? e.touches[0].clientX : e.clientX;
                 let percentage = Math.max(0, Math.min(1, (clientX - rect.left) / rect.width));
 
-                DOM.transFeed.scrollTop = percentage * (DOM.transFeed.scrollHeight - DOM.transFeed.clientHeight);
+                const maxScroll = DOM.transFeed.scrollHeight - DOM.transFeed.clientHeight;
+                const targetScroll = percentage * maxScroll;
+
+                DOM.transFeed.scrollTop = targetScroll;
                 DOM.arabicFeed.scrollTop = percentage * (DOM.arabicFeed.scrollHeight - DOM.arabicFeed.clientHeight);
+
+                const screens = Array.from(getActiveFeed().querySelectorAll('.verse-screen'));
+                let closestVerse = '';
+
+                for (let i = 0; i < screens.length; i++) {
+                    if (screens[i].offsetTop >= targetScroll) {
+                        closestVerse = screens[i].dataset.verse;
+                        break;
+                    }
+                }
+                if (!closestVerse && screens.length > 0) closestVerse = screens[screens.length - 1].dataset.verse;
+
+                tooltip.innerText = closestVerse === 'bismillah' ? 'Bismillah' : `Verse ${closestVerse}`;
+                tooltip.style.left = `${percentage * 100}%`;
             };
 
             const startScrub = (e) => {
                 isScrubbing = true;
+                tooltip.classList.add('visible');
                 DOM.transFeed.style.scrollBehavior = 'auto';
                 DOM.arabicFeed.style.scrollBehavior = 'auto';
                 haltAllAutomations();
@@ -1570,6 +1828,7 @@
             const stopScrub = () => {
                 if (isScrubbing) {
                     isScrubbing = false;
+                    tooltip.classList.remove('visible');
                     DOM.transFeed.style.scrollBehavior = 'smooth';
                     DOM.arabicFeed.style.scrollBehavior = 'smooth';
                     DOM.transFeed.scrollBy(0, 0);
@@ -1577,7 +1836,7 @@
                 }
             };
 
-            track.addEventListener('mousedown', startScrub); window.addEventListener('mousemove', handleScrub); window.addEventListener('mouseup', stopScrub);
+            track.addEventListener('mousedown', startScrub); window.addEventListener('mousemove', handleScrub); window.addEventListener('mouseup', stopScrub); track.addEventListener('mouseleave', stopScrub);
             track.addEventListener('touchstart', startScrub, { passive: true }); track.addEventListener('touchmove', handleScrub, { passive: true }); track.addEventListener('touchend', stopScrub);
         }
 
@@ -1603,7 +1862,6 @@
             element.addEventListener('contextmenu', e => e.preventDefault());
         }
 
-        // --- Extracted setting and scroll fade initializers ---
         function initScrollingFades() {
             DOM.tabCarousel.addEventListener('scroll', () => {
                 const snapPoint = window.innerWidth / 2;
@@ -1615,12 +1873,19 @@
                 updateProgressBar();
                 feed.classList.add('is-scrolling');
 
+                // If user scrolls manually, unlock saving and hide the continue banner
+                if (feed.scrollTop > 50) {
+                    AppState.preventSave = false;
+                    hideContinueBanner();
+                }
+
                 if (!AppState.hasSwipedUp && feed.scrollTop > 50) {
                     AppState.hasSwipedUp = true;
                     localStorage.setItem('quran_has_swiped', 'true');
                     const hint = document.getElementById('swipe-hint');
                     if (hint) { hint.classList.add('fade-out'); setTimeout(() => hint.classList.add('hidden'), 300); }
                 }
+
                 clearTimeout(feed.scrollFadeTimer);
                 feed.scrollFadeTimer = setTimeout(() => feed.classList.remove('is-scrolling'), 200);
             }
@@ -1629,7 +1894,57 @@
             DOM.arabicFeed.addEventListener('scroll', () => { if (AppState.currentTab === 'arabic') handleFeedScroll(DOM.arabicFeed); });
         }
 
+        // ==========================================
+        // 12. TTS VOICE POPULATION & SETTINGS
+        // ==========================================
+        function populateVoiceList() {
+            AppState.availableTTSVoices = window.speechSynthesis.getVoices();
+            const voiceSelect = document.getElementById('tts-voice-select');
+
+            const englishVoices = AppState.availableTTSVoices.filter(voice => voice.lang.startsWith('en'));
+            const voicesToUse = englishVoices.length > 0 ? englishVoices : AppState.availableTTSVoices;
+
+            if (voicesToUse.length === 0) {
+                voiceSelect.innerHTML = '<option value="">No voices available</option>';
+                return;
+            }
+
+            voiceSelect.innerHTML = '';
+            voicesToUse.forEach((voice) => {
+                const option = document.createElement('option');
+                option.textContent = `${voice.name} (${voice.lang})`;
+                if (voice.default) option.textContent += ' -- Default';
+                option.setAttribute('value', voice.voiceURI);
+                voiceSelect.appendChild(option);
+            });
+
+            if (AppState.ttsVoiceURI && voicesToUse.find(v => v.voiceURI === AppState.ttsVoiceURI)) {
+                voiceSelect.value = AppState.ttsVoiceURI;
+            } else {
+                AppState.ttsVoiceURI = voicesToUse[0].voiceURI;
+                voiceSelect.value = AppState.ttsVoiceURI;
+            }
+        }
+
+        if (typeof speechSynthesis !== 'undefined' && speechSynthesis.onvoiceschanged !== undefined) {
+            speechSynthesis.onvoiceschanged = populateVoiceList;
+        }
+
         function initSettings() {
+            const fontSlider = document.getElementById('font-size-slider');
+            const fontVal = document.getElementById('font-size-val');
+
+            fontSlider.value = AppState.fontScale;
+            fontVal.innerText = AppState.fontScale.toFixed(2);
+            document.documentElement.style.setProperty('--font-scale', AppState.fontScale);
+
+            fontSlider.addEventListener('input', (e) => {
+                AppState.fontScale = parseFloat(e.target.value);
+                fontVal.innerText = AppState.fontScale.toFixed(2);
+                document.documentElement.style.setProperty('--font-scale', AppState.fontScale);
+                localStorage.setItem('fontScale', AppState.fontScale);
+            });
+
             const themeBtn = document.getElementById('theme-toggle');
             const themeMeta = document.getElementById('theme-color-meta');
             let currentTheme = localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
@@ -1658,14 +1973,41 @@
                 await fetchQuranData();
             });
 
-            // Reciter settings initialization
+            const audioModeSelect = document.getElementById('audio-mode-select');
             const reciterSelect = document.getElementById('reciter-select');
+            const ttsVoiceSelect = document.getElementById('tts-voice-select');
+
+            audioModeSelect.value = AppState.audioMode;
+
+            reciterSelect.disabled = AppState.audioMode === 'tts';
+            ttsVoiceSelect.disabled = AppState.audioMode === 'mp3';
+
+            audioModeSelect.addEventListener('change', (e) => {
+                AppState.audioMode = e.target.value;
+                localStorage.setItem('audioMode', AppState.audioMode);
+
+                reciterSelect.disabled = AppState.audioMode === 'tts';
+                ttsVoiceSelect.disabled = AppState.audioMode === 'mp3';
+
+                stopAudio();
+            });
+
             reciterSelect.value = AppState.reciterPath;
             reciterSelect.addEventListener('change', (e) => {
                 AppState.reciterPath = e.target.value;
                 localStorage.setItem('reciterPath', AppState.reciterPath);
                 stopAudio();
             });
+
+            ttsVoiceSelect.addEventListener('change', (e) => {
+                AppState.ttsVoiceURI = e.target.value;
+                localStorage.setItem('ttsVoiceURI', AppState.ttsVoiceURI);
+                stopAudio();
+            });
+
+            if (typeof speechSynthesis !== 'undefined') {
+                populateVoiceList();
+            }
 
             const speedSlider = document.getElementById('scroll-speed-slider');
             const speedValDisplay = document.getElementById('speed-val');
