@@ -1,0 +1,46 @@
+export const SURAH_META = [
+    { index: 1, name: "Al-Fatihah", translation: "The Opening" }, { index: 2, name: "Al-Baqarah", translation: "The Cow" }, { index: 3, name: "Ali 'Imran", translation: "Family of Imran" }, { index: 4, name: "An-Nisa'", translation: "The Women" }, { index: 5, name: "Al-Ma'idah", translation: "The Table Spread" }, { index: 6, name: "Al-An'am", translation: "The Cattle" }, { index: 7, name: "Al-A'raf", translation: "The Heights" }, { index: 8, name: "Al-Anfal", translation: "The Spoils of War" }, { index: 9, name: "At-Tawbah", translation: "The Repentance" }, { index: 10, name: "Yunus", translation: "Jonah" }, { index: 11, name: "Hud", translation: "Hud" }, { index: 12, name: "Yusuf", translation: "Joseph" }, { index: 13, name: "Ar-Ra'd", translation: "The Thunder" }, { index: 14, name: "Ibrahim", translation: "Abraham" }, { index: 15, name: "Al-Hijr", translation: "The Rocky Tract" }, { index: 16, name: "An-Nahl", translation: "The Bee" }, { index: 17, name: "Al-Isra'", translation: "The Night Journey" }, { index: 18, name: "Al-Kahf", translation: "The Cave" }, { index: 19, name: "Maryam", translation: "Mary" }, { index: 20, name: "Ta-Ha", translation: "Ta-Ha" }, { index: 21, name: "Al-Anbiya'", translation: "The Prophets" }, { index: 22, name: "Al-Hajj", translation: "The Pilgrimage" }, { index: 23, name: "Al-Mu'minun", translation: "The Believers" }, { index: 24, name: "An-Nur", translation: "The Light" }, { index: 25, name: "Al-Furqan", translation: "The Criterion" }, { index: 26, name: "Ash-Shu'ara'", translation: "The Poets" }, { index: 27, name: "An-Naml", translation: "The Ant" }, { index: 28, name: "Al-Qasas", translation: "The Stories" }, { index: 29, name: "Al-'Ankabut", translation: "The Spider" }, { index: 30, name: "Ar-Rum", translation: "The Romans" }, { index: 31, name: "Luqman", translation: "Luqman" }, { index: 32, name: "As-Sajdah", translation: "The Prostration" }, { index: 33, name: "Al-Ahzab", translation: "The Combined Forces" }, { index: 34, name: "Saba'", translation: "Sheba" }, { index: 35, name: "Fatir", translation: "Originator" }, { index: 36, name: "Ya-Sin", translation: "Ya-Sin" }, { index: 37, name: "As-Saffat", translation: "Those who set the Ranks" }, { index: 38, name: "Sad", translation: "The Letter 'Saad'" }, { index: 39, name: "Az-Zumar", translation: "The Troops" }, { index: 40, name: "Ghafir", translation: "The Forgiver" }, { index: 41, name: "Fussilat", translation: "Explained in Detail" }, { index: 42, name: "Ash-Shura", translation: "The Consultation" }, { index: 43, name: "Az-Zukhruf", translation: "The Ornaments of Gold" }, { index: 44, name: "Ad-Dukhan", translation: "The Smoke" }, { index: 45, name: "Al-Jathiyah", translation: "The Crouching" }, { index: 46, name: "Al-Ahqaf", translation: "The Wind-Curved Sandhills" }, { index: 47, name: "Muhammad", translation: "Muhammad" }, { index: 48, name: "Al-Fath", translation: "The Victory" }, { index: 49, name: "Al-Hujurat", translation: "The Dwellings" }, { index: 50, name: "Qaf", translation: "The Letter 'Qaf'" }, { index: 51, name: "Adh-Dhariyat", translation: "The Winnowing Winds" }, { index: 52, name: "At-Tur", translation: "The Mount" }, { index: 53, name: "An-Najm", translation: "The Star" }, { index: 54, name: "Al-Qamar", translation: "The Moon" }, { index: 55, name: "Ar-Rahman", translation: "The Beneficent" }, { index: 56, name: "Al-Waqi'ah", translation: "The Inevitable" }, { index: 57, name: "Al-Hadid", translation: "The Iron" }, { index: 58, name: "Al-Mujadilah", translation: "The Pleading Woman" }, { index: 59, name: "Al-Hashr", translation: "The Exile" }, { index: 60, name: "Al-Mumtahanah", translation: "She that is to be examined" }, { index: 61, name: "As-Saff", translation: "The Ranks" }, { index: 62, name: "Al-Jumu'ah", translation: "The Congregation, Friday" }, { index: 63, name: "Al-Munafiqun", translation: "The Hypocrites" }, { index: 64, name: "At-Taghabun", translation: "The Mutual Disillusion" }, { index: 65, name: "At-Talaq", translation: "The Divorce" }, { index: 66, name: "At-Tahrim", translation: "The Prohibition" }, { index: 67, name: "Al-Mulk", translation: "The Sovereignty" }, { index: 68, name: "Al-Qalam", translation: "The Pen" }, { index: 69, name: "Al-Haqqah", translation: "The Reality" }, { index: 70, name: "Al-Ma'arij", translation: "The Ascending Stairways" }, { index: 71, name: "Nuh", translation: "Noah" }, { index: 72, name: "Al-Jinn", translation: "The Jinn" }, { index: 73, name: "Al-Muzzammil", translation: "The Enshrouded One" }, { index: 74, name: "Al-Muddaththir", translation: "The Cloaked One" }, { index: 75, name: "Al-Qiyamah", translation: "The Resurrection" }, { index: 76, name: "Al-Insan", translation: "The Man" }, { index: 77, name: "Al-Mursalat", translation: "The Emissaries" }, { index: 78, name: "An-Naba'", translation: "The Tidings" }, { index: 79, name: "An-Nazi'at", translation: "Those who drag forth" }, { index: 80, name: "'Abasa", translation: "He Frowned" }, { index: 81, name: "At-Takwir", translation: "The Overthrowing" }, { index: 82, name: "Al-Infitar", translation: "The Cleaving" }, { index: 83, name: "Al-Mutaffifin", translation: "The Defrauding" }, { index: 84, name: "Al-Inshiqaq", translation: "The Sundering" }, { index: 85, name: "Al-Buruj", translation: "The Mansions of the Stars" }, { index: 86, name: "At-Tariq", translation: "The Night-Comer" }, { index: 87, name: "Al-A'la", translation: "The Most High" }, { index: 88, name: "Al-Ghashiyah", translation: "The Overwhelming" }, { index: 89, name: "Al-Fajr", translation: "The Dawn" }, { index: 90, name: "Al-Balad", translation: "The City" }, { index: 91, name: "Ash-Shams", translation: "The Sun" }, { index: 92, name: "Al-Layl", translation: "The Night" }, { index: 93, name: "Ad-Duha", translation: "The Morning Hours" }, { index: 94, name: "Ash-Sharh", translation: "The Relief" }, { index: 95, name: "At-Tin", translation: "The Fig" }, { index: 96, name: "Al-'Alaq", translation: "The Clot" }, { index: 97, name: "Al-Qadr", translation: "The Power" }, { index: 98, name: "Al-Bayyinah", translation: "The Clear Proof" }, { index: 99, name: "Az-Zalzalah", translation: "The Earthquake" }, { index: 100, name: "Al-'Adiyat", translation: "The Courser" }, { index: 101, name: "Al-Qari'ah", translation: "The Calamity" }, { index: 102, name: "At-Takathur", translation: "The Rivalry in world increase" }, { index: 103, name: "Al-'Asr", translation: "The Declining Day" }, { index: 104, name: "Al-Humazah", translation: "The Traducer" }, { index: 105, name: "Al-Fil", translation: "The Elephant" }, { index: 106, name: "Quraysh", translation: "Quraysh" }, { index: 107, name: "Al-Ma'un", translation: "Small Kindnesses" }, { index: 108, name: "Al-Kawthar", translation: "Abundance" }, { index: 109, name: "Al-Kafirun", translation: "The Disbelievers" }, { index: 110, name: "An-Nasr", translation: "The Divine Support" }, { index: 111, name: "Al-Masad", translation: "The Palm Fiber" }, { index: 112, name: "Al-Ikhlas", translation: "The Sincerity" }, { index: 113, name: "Al-Falaq", translation: "The Daybreak" }, { index: 114, name: "An-Nas", translation: "Mankind" }
+];
+
+export const ICONS = {
+    bookmark: `<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg>`,
+    play: `<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M8 5v14l11-7z"/></svg>`,
+    pause: `<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>`,
+    autoplay: `<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M4 10h12v2H4zm0-4h12v2H4zm0 8h8v2H4zm10 0v6l5-3z"/></svg>`
+};
+
+export const AppState = {
+    quranXML: null,
+    arabicXML: null,
+    translationFile: localStorage.getItem('translationFile') || 'en.itani.xml',
+    fontScale: parseFloat(localStorage.getItem('fontScale')) || 1.0,
+    audioMode: localStorage.getItem('audioMode') || 'mp3',
+    reciterPath: localStorage.getItem('reciterPath') || 'Alafasy_128kbps',
+    ttsVoiceURI: localStorage.getItem('ttsVoiceURI') || '',
+    availableTTSVoices: [],
+    bookmarks: JSON.parse(localStorage.getItem('quran_bookmarks')) || [],
+    savedPositions: JSON.parse(localStorage.getItem('quran_positions')) || {},
+    currentSurahIndex: 1,
+    currentArabicSurahName: '',
+    currentTab: 'trans',
+    activeVerseIndex: null,
+    verseObserver: null,
+    preventSave: true,
+    userHasInteracted: false,
+    autoAdvanceAudio: false,
+    isAutoScrolling: false,
+    autoScrollSpeed: parseInt(localStorage.getItem('autoScrollSpeed')) || 400,
+    autoScrollTimer: null,
+    shouldAutoPlayNext: false,
+    hasSwipedUp: localStorage.getItem('quran_has_swiped') === 'true',
+    currentAudioObj: null,
+    activePlayingVerse: null
+};
+
+export const DOM = {
+    tabCarousel: document.getElementById('tab-carousel'),
+    transFeed: document.getElementById('trans-feed'),
+    arabicFeed: document.getElementById('arabic-feed')
+};
+
+export const getActiveFeed = () => AppState.currentTab === 'trans' ? DOM.transFeed : DOM.arabicFeed;
